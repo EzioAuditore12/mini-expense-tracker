@@ -13,6 +13,7 @@ import { env } from '@/env';
 import { healthCheckRouter } from '@/routers/health-check.router';
 import { authRouter } from './routers/auth.router';
 import { userRouter } from './routers/user.router';
+import { expenseRouter } from './routers/expense.router';
 
 const app: Express = express();
 
@@ -33,6 +34,7 @@ app.use(requestLogger);
 app.use('/health-check', healthCheckRouter);
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
+app.use('/expense', expenseRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

@@ -6,6 +6,7 @@ import { logger } from '@/utils/logger';
 const server = app.listen(env.PORT, () => {
   const { NODE_ENV, HOST, PORT } = env;
   logger.info(`Server (${NODE_ENV}) running on port http://${HOST}:${PORT}`);
+  logger.info(`Rest Api Docs on port http://${HOST}:${PORT}/docs`);
 });
 
 const onCloseSignal = () => {

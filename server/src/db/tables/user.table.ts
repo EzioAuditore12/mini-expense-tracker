@@ -9,12 +9,17 @@ export const userTable = sqliteTable(USER_TABLE_NAME, {
   id: text('id')
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
+
   name: text('name', { length: 100 }).notNull(),
+
   email: text('email', { length: 240 }).unique().notNull(),
+
   password: text('password').notNull(),
+
   createdAt: integer('created_at', { mode: 'timestamp' })
     .$defaultFn(() => new Date())
     .notNull(),
+
   updatedAt: integer('updated_at', { mode: 'timestamp' })
     .$onUpdateFn(() => new Date())
     .notNull(),

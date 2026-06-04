@@ -12,7 +12,7 @@ openAPIRouter.get('/openapi.json', (_req: Request, res: Response) => {
 });
 
 openAPIRouter.use(
-  '/api',
+  '/docs',
   apiReference({
     url: '/openapi.json',
   }),

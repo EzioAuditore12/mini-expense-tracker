@@ -10,8 +10,11 @@ export const blackListedRefreshTokenTable = sqliteTable(
     id: text('id')
       .primaryKey()
       .$defaultFn(() => new SnowFlakeId(1).generate().toString()),
+
     refreshToken: text('refresh_token').notNull(),
+
     createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+
     expiredAt: integer('expired_at', { mode: 'timestamp' }).notNull(),
   },
 );
