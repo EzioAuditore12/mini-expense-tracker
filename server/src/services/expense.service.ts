@@ -1,4 +1,4 @@
-import { and, asc, eq, gt, ilike } from 'drizzle-orm';
+import { and, desc, eq, gt, gte, ilike, lte, sum } from 'drizzle-orm';
 
 import { db } from '@/db';
 import {
@@ -8,7 +8,11 @@ import {
   type ExpenseInsert,
 } from '@/db/tables/expense.table';
 
-import type { Pagination } from '@/validators/main/pagination';
+import type { GetAllExpenses } from '@/validators/main/expense/get-all/request';
+import type { GetAllExpensesResponse } from '@/validators/main/expense/get-all/response';
+import type { GetExpenseSummaryResponse } from '@/validators/main/expense/get-summary/response.schema';
+import type { GetCategorySummaryResponse } from '@/validators/main/expense/get-category-summary/response.schema';
+import type { GetMonthlyTrendResponse } from '@/validators/main/expense/get-monthly-trend/response.schema';
 
 export class ExpenseService {
   private readonly database = db;
@@ -44,21 +48,28 @@ export class ExpenseService {
 
   public async getAllByUserId(
     userId: string,
-    pagination: Pagination,
-  ): Promise<Expense[]> {
-    const { pageSize, cursor, search } = pagination;
+    pagination: GetAllExpenses,
+  ): Promise<GetAllExpensesResponse> {
+    const { pageSize, cursor, search, category, endDate, startDate } =
+      pagination;
 
     const conditions = [eq(this.table.userId, userId)];
 
     if (cursor) conditions.push(gt(this.table.id, cursor));
 
-    if (search) conditions.push(ilike(this.table.category, `%${search}%`));
+    if (search) conditions.push(ilike(this.table.note, `%${search}%`));
+
+    if (category) conditions.push(eq(this.table.category, category));
+
+    if (startDate) conditions.push(gte(this.table.expenseDate, startDate));
+
+    if (endDate) conditions.push(lte(this.table.expenseDate, endDate));
 
     return await this.database
       .select()
       .from(this.table)
       .where(and(...conditions))
-      .orderBy(asc(this.table.id))
+      .orderBy(desc(this.table.id))
       .limit(pageSize);
   }
 
@@ -77,6 +88,84 @@ export class ExpenseService {
       .then((res) => (res.length > 0 ? res[0].id : null));
 
     return !!id;
+  }
+
+  public async getSummaryByUserId(
+    userId: string,
+  ): Promise<GetExpenseSummaryResponse> {
+    const expenses = await this.getAllWithAmountAndCategoryByUserId(userId);
+
+    const totalExpenses = expenses.reduce(
+      (acc, expense) => acc + expense.amount,
+      0,
+    );
+
+    const highestExpense = expenses.reduce(
+      (max, expense) => (expense.amount > max.amount ? expense : max),
+      expenses[0],
+    );
+
+    return {
+      totalExpenses,
+
+      highestExpense: highestExpense
+        ? {
+            amount: highestExpense.amount,
+            category: highestExpense.category,
+          }
+        : null,
+    };
+  }
+
+  public async getCategorySummaryByUserId(
+    userId: string,
+  ): Promise<GetCategorySummaryResponse> {
+    const result = await this.database
+      .select({
+        category: this.table.category,
+        total: sum(this.table.amount),
+      })
+      .from(this.table)
+      .where(eq(this.table.userId, userId))
+      .groupBy(this.table.category);
+
+    return result.map((item) => ({
+      category: item.category,
+      total: Number(item.total ?? 0),
+    }));
+  }
+
+  public async getMonthlyTrendByUserId(
+    userId: string,
+  ): Promise<GetMonthlyTrendResponse> {
+    const expenses = await this.database
+      .select()
+      .from(this.table)
+      .where(eq(this.table.userId, userId));
+
+    const monthlyMap = new Map<string, number>();
+
+    for (const expense of expenses) {
+      const month = new Date(expense.expenseDate).toLocaleString('default', {
+        month: 'short',
+      });
+
+      monthlyMap.set(month, (monthlyMap.get(month) ?? 0) + expense.amount);
+    }
+
+    return Array.from(monthlyMap.entries()).map(([month, total]) => ({
+      month,
+      total,
+    }));
+  }
+
+  private async getAllWithAmountAndCategoryByUserId(
+    userId: string,
+  ): Promise<Pick<Expense, 'amount' | 'category'>[]> {
+    return await this.database
+      .select({ amount: this.table.amount, category: this.table.category })
+      .from(this.table)
+      .where(eq(this.table.userId, userId));
   }
 }
 

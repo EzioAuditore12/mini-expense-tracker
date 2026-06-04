@@ -1,4 +1,4 @@
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
 import { NotFoundError, UnauthenticatedError } from 'express-error-toolkit';
 import { StatusCodes } from 'http-status-codes';
 
@@ -6,8 +6,8 @@ import { expenseService } from '@/services/expense.service';
 
 import type { CreateExpenseRequest } from '@/validators/main/expense/create/request';
 import type { UpdateExpenseRequest } from '@/validators/main/expense/update/request';
-import type { PaginationRequest } from '@/validators/main/pagination';
 import type { ExpenseParamRequest } from '@/validators/main/expense/param';
+import type { GetAllExpensesRequest } from '@/validators/main/expense/get-all/request';
 
 export class ExpenseController {
   private readonly expenseService = expenseService;
@@ -50,7 +50,7 @@ export class ExpenseController {
     return res.status(StatusCodes.OK).send(result);
   };
 
-  public getAllByUserId = async (req: PaginationRequest, res: Response) => {
+  public getAllByUserId = async (req: GetAllExpensesRequest, res: Response) => {
     const userId = req.user?.id!;
     const query = req.query;
 
@@ -76,6 +76,30 @@ export class ExpenseController {
     return res
       .status(StatusCodes.ACCEPTED)
       .send({ message: `Record ${expenseId} deleted successfully` });
+  };
+
+  public getSummaryByUserId = async (req: Request, res: Response) => {
+    const userId = req.user?.id!;
+
+    const result = await this.expenseService.getSummaryByUserId(userId);
+
+    return res.status(StatusCodes.OK).send(result);
+  };
+
+  public getCategorySummaryByUserId = async (req: Request, res: Response) => {
+    const userId = req.user?.id!;
+
+    const result = await this.expenseService.getCategorySummaryByUserId(userId);
+
+    return res.status(StatusCodes.OK).send(result);
+  };
+
+  public getMonthlyTrendByUserId = async (req: Request, res: Response) => {
+    const userId = req.user?.id!;
+
+    const result = await this.expenseService.getMonthlyTrendByUserId(userId);
+
+    return res.status(StatusCodes.OK).send(result);
   };
 }
 

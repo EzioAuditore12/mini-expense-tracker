@@ -15,7 +15,10 @@ import { updateExpenseSchema } from '@/validators/main/expense/update/request';
 import { updateExpenseResponseSchema } from '@/validators/main/expense/update/response';
 import { expenseParamSchema } from '@/validators/main/expense/param';
 import { expenseSchema } from '@/db/tables/expense.table';
-import { paginationSchema } from '@/validators/main/pagination';
+import { getAllExpensesSchema } from '@/validators/main/expense/get-all/request';
+import { getExpenseSummaryResponseSchema } from '@/validators/main/expense/get-summary/response.schema';
+import { getCategorySummaryResponseSchema } from '@/validators/main/expense/get-category-summary/response.schema';
+import { getMonthlyTrendResponseSchema } from '@/validators/main/expense/get-monthly-trend/response.schema';
 
 export const expenseRegistry = new OpenAPIRegistry();
 export const expenseRouter: Router = express.Router();
@@ -39,6 +42,72 @@ expenseRouter.post(
 
 expenseRegistry.registerPath({
   method: 'get',
+  path: '/expense/summary',
+  tags: ['Expense'],
+  request: {
+    params: expenseParamSchema,
+  },
+  responses: createApiResponse(getExpenseSummaryResponseSchema, 'Success'),
+});
+
+expenseRouter.get(
+  '/summary',
+  authMiddleware,
+  expenseController.getSummaryByUserId,
+);
+
+expenseRegistry.registerPath({
+  method: 'get',
+  path: '/expense/category-summary',
+  tags: ['Expense'],
+  request: {
+    params: expenseParamSchema,
+  },
+  responses: createApiResponse(getCategorySummaryResponseSchema, 'Success'),
+});
+
+expenseRouter.get(
+  '/category-summary',
+  authMiddleware,
+  expenseController.getCategorySummaryByUserId,
+);
+
+expenseRegistry.registerPath({
+  method: 'get',
+  path: '/expense/monthly-trend',
+  tags: ['Expense'],
+  request: {
+    params: expenseParamSchema,
+  },
+  responses: createApiResponse(getMonthlyTrendResponseSchema, 'Success'),
+});
+
+expenseRouter.get(
+  '/monthly-trend',
+  authMiddleware,
+  expenseController.getMonthlyTrendByUserId,
+);
+
+expenseRegistry.registerPath({
+  method: 'get',
+  path: '/expense',
+  tags: ['Expense'],
+  request: {
+    query: getAllExpensesSchema,
+  },
+  responses: createApiResponse(expenseSchema.array(), 'Success'),
+});
+
+expenseRouter.get(
+  '/',
+  authMiddleware,
+  //@ts-ignores
+  validate({ query: getAllExpensesSchema }),
+  expenseController.getAllByUserId,
+);
+
+expenseRegistry.registerPath({
+  method: 'get',
   path: '/expense/{id}',
   tags: ['Expense'],
   request: {
@@ -51,24 +120,6 @@ expenseRouter.get(
   '/:id',
   validate({ params: expenseParamSchema }),
   expenseController.get,
-);
-
-expenseRegistry.registerPath({
-  method: 'get',
-  path: '/expense',
-  tags: ['Expense'],
-  request: {
-    query: paginationSchema,
-  },
-  responses: createApiResponse(expenseSchema.array(), 'Success'),
-});
-
-expenseRouter.get(
-  '/',
-  authMiddleware,
-  //@ts-ignores
-  validate({ query: paginationSchema }),
-  expenseController.getAllByUserId,
 );
 
 expenseRegistry.registerPath({
