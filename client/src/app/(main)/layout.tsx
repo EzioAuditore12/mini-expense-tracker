@@ -51,7 +51,7 @@ function RouteComponent() {
           '--header-height': 'calc(var(--spacing) * 12)',
         } as CSSProperties
       }>
-      <AppSidebar variant="inset" navMain={navMain} user={user} handleUserLogout={handleLogout} />
+      <AppSidebar variant="inset" navMain={navMain} user={user!} handleUserLogout={handleLogout} />
       <div className="border-border/60 flex min-h-0 flex-1 flex-col border-l">
         <SiteHeader />
         <main className="flex-1 overflow-y-auto">

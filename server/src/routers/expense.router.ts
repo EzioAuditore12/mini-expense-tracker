@@ -19,6 +19,7 @@ import { getAllExpensesSchema } from '@/validators/main/expense/get-all/request'
 import { getExpenseSummaryResponseSchema } from '@/validators/main/expense/get-summary/response.schema';
 import { getCategorySummaryResponseSchema } from '@/validators/main/expense/get-category-summary/response.schema';
 import { getMonthlyTrendResponseSchema } from '@/validators/main/expense/get-monthly-trend/response.schema';
+import { getAllExpensesResponseSchema } from '@/validators/main/expense/get-all/response';
 
 export const expenseRegistry = new OpenAPIRegistry();
 export const expenseRouter: Router = express.Router();
@@ -44,9 +45,6 @@ expenseRegistry.registerPath({
   method: 'get',
   path: '/expense/summary',
   tags: ['Expense'],
-  request: {
-    params: expenseParamSchema,
-  },
   responses: createApiResponse(getExpenseSummaryResponseSchema, 'Success'),
 });
 
@@ -60,9 +58,6 @@ expenseRegistry.registerPath({
   method: 'get',
   path: '/expense/category-summary',
   tags: ['Expense'],
-  request: {
-    params: expenseParamSchema,
-  },
   responses: createApiResponse(getCategorySummaryResponseSchema, 'Success'),
 });
 
@@ -76,9 +71,6 @@ expenseRegistry.registerPath({
   method: 'get',
   path: '/expense/monthly-trend',
   tags: ['Expense'],
-  request: {
-    params: expenseParamSchema,
-  },
   responses: createApiResponse(getMonthlyTrendResponseSchema, 'Success'),
 });
 
@@ -95,7 +87,7 @@ expenseRegistry.registerPath({
   request: {
     query: getAllExpensesSchema,
   },
-  responses: createApiResponse(expenseSchema.array(), 'Success'),
+  responses: createApiResponse(getAllExpensesResponseSchema, 'Success'),
 });
 
 expenseRouter.get(

@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import { expenseSchema } from '../expense.schema';
 
 export const updateExpenseParamSchema = expenseSchema

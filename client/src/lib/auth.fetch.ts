@@ -5,6 +5,8 @@ import { env } from '@/env';
 import { useAuthStore } from '@/store/auth';
 import { refreshAccessToken } from './tokens-manager';
 
+import { buildQueryParams } from './fetch';
+
 interface AuthenticatedFetchProps extends Omit<FetchOptions, 'body' | 'method'> {
   baseUrl?: string;
   url: string;
@@ -116,10 +118,9 @@ export const authenticatedTypedFetch = async <S extends s.StandardSchemaV1>({
     authHeaders['Content-Type'] = 'application/json';
   }
 
-  if (query !== undefined) {
-    const queryString = new URLSearchParams(query as Record<string, string>).toString();
-    url = url + (url.includes('?') ? '&' : '?') + queryString;
-  }
+  const paramsValues = buildQueryParams(query);
+
+  if (paramsValues) url = url + (url.includes('?') ? '&' : '?') + paramsValues;
 
   const requestOptions = {
     method,
@@ -164,5 +165,7 @@ export const authenticatedTypedFetch = async <S extends s.StandardSchemaV1>({
 
   if (result.issues) throw new Error(JSON.stringify(result.issues));
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   return result.value;
 };

@@ -10,9 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 import { cn } from '@/lib/utils';
 
-export interface DashboardDateRangePickerProps extends ComponentProps<typeof Field> {}
-
-export function DashboardDateRangePicker({ className, ...props }: DashboardDateRangePickerProps) {
+export function DashboardDateRangePicker({ className, ...props }: ComponentProps<typeof Field>) {
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(new Date().getFullYear(), 0, 20),
     to: addDays(new Date(new Date().getFullYear(), 0, 20), 20),

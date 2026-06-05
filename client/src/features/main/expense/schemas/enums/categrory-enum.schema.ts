@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const categoryEnumSchema = z.enum([
+export const categoryEnum = [
   'FOOD',
   'TRANSPORT',
   'BILLS',
@@ -10,6 +10,8 @@ export const categoryEnumSchema = z.enum([
   'EDUCATION',
   'TRAVEL',
   'OTHER',
-]);
+] as const;
+
+export const categoryEnumSchema = z.enum(categoryEnum);
 
 export type CategoryEnum = z.infer<typeof categoryEnumSchema>;

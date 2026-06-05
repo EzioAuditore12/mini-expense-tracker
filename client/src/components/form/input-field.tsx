@@ -1,9 +1,11 @@
-import type { ComponentProps } from 'react';
+import { Activity, type ComponentProps } from 'react';
 
 import { useFieldContext } from '@/lib/form-context';
-import { cn } from '@/lib/utils';
+
 import { Input } from '../ui/input';
 import { FieldError } from './field-error';
+
+import { cn } from '@/lib/utils';
 
 export const InputField = ({ className, ...inputProps }: ComponentProps<typeof Input>) => {
   const field = useFieldContext<string>();
@@ -20,7 +22,9 @@ export const InputField = ({ className, ...inputProps }: ComponentProps<typeof I
         {...inputProps}
       />
       <div className="min-h-5 text-sm text-red-500">
-        {hasError && <FieldError meta={field.state.meta} />}
+        <Activity mode={hasError ? 'visible' : 'hidden'}>
+          <FieldError meta={field.state.meta} />
+        </Activity>
       </div>
     </div>
   );

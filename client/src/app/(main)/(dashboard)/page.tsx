@@ -1,3 +1,6 @@
+import { createFileRoute } from '@tanstack/react-router';
+import { IndianRupeeIcon, ReceiptTextIcon, TrendingUpIcon, WalletIcon } from 'lucide-react';
+
 import { ExpensesChartCard } from '@/features/main/dashboard/components/expense-chart-card';
 import { DashboardHeader } from '@/features/main/dashboard/components/header';
 import { SpendingTrendCard } from '@/features/main/dashboard/components/spending-data-card';
@@ -5,9 +8,6 @@ import {
   DashboardStatsCard,
   type StatsCardData,
 } from '@/features/main/dashboard/components/stats-card';
-import { createFileRoute } from '@tanstack/react-router';
-import { IndianRupeeIcon, ReceiptTextIcon, TrendingUpIcon, WalletIcon } from 'lucide-react';
-
 export const Route = createFileRoute('/(main)/(dashboard)/')({
   component: RouteComponent,
 });

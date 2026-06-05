@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import type { ValidatedRequest } from 'express-zod-safe';
 
 export const paginationSchema = z.object({
   page: z.coerce.number().min(1).default(1),
@@ -8,7 +7,3 @@ export const paginationSchema = z.object({
 });
 
 export type Pagination = z.infer<typeof paginationSchema>;
-
-export type PaginationRequest = ValidatedRequest<{
-  query: typeof paginationSchema;
-}>;

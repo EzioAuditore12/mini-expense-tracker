@@ -18,12 +18,14 @@
     "db:check": "npx drizzle-kit check",
     "db:up": "npx drizzle-kit up",
     "db:studio": "npx drizzle-kit studio --verbose",
+    "seed:expense": "node --import=tsx seeders/expense.seeder.ts",
     "test": "vitest run",
     "test:cov": "vitest run --coverage",
     "format": "prettier --write \"src/**/*.{ts,tsx}\""
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^8.5.0",
+    "@faker-js/faker": "^10.4.0",
     "@node-rs/argon2": "^2.0.2",
     "@scalar/express-api-reference": "^0.9.20",
     "better-sqlite3": "^12.10.0",

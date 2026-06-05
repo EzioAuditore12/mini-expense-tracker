@@ -1,4 +1,4 @@
-import { and, desc, eq, gt, gte, ilike, lte, sum } from 'drizzle-orm';
+import { and, count, desc, eq, gt, gte, like, lte, sum } from 'drizzle-orm';
 
 import { db } from '@/db';
 import {
@@ -50,27 +50,57 @@ export class ExpenseService {
     userId: string,
     pagination: GetAllExpenses,
   ): Promise<GetAllExpensesResponse> {
-    const { pageSize, cursor, search, category, endDate, startDate } =
-      pagination;
+    const { page, pageSize, search, category, endDate, startDate } = pagination;
 
     const conditions = [eq(this.table.userId, userId)];
 
-    if (cursor) conditions.push(gt(this.table.id, cursor));
+    if (search) {
+      conditions.push(like(this.table.note, `%${search}%`));
+    }
 
-    if (search) conditions.push(ilike(this.table.note, `%${search}%`));
+    if (category) {
+      conditions.push(eq(this.table.category, category));
+    }
 
-    if (category) conditions.push(eq(this.table.category, category));
+    if (startDate) {
+      conditions.push(gte(this.table.expenseDate, startDate));
+    }
 
-    if (startDate) conditions.push(gte(this.table.expenseDate, startDate));
+    if (endDate) {
+      conditions.push(lte(this.table.expenseDate, endDate));
+    }
 
-    if (endDate) conditions.push(lte(this.table.expenseDate, endDate));
+    const whereClause = and(...conditions);
 
-    return await this.database
-      .select()
-      .from(this.table)
-      .where(and(...conditions))
-      .orderBy(desc(this.table.id))
-      .limit(pageSize);
+    const [expenses, totalResult] = await Promise.all([
+      this.database
+        .select()
+        .from(this.table)
+        .where(whereClause)
+        .orderBy(desc(this.table.expenseDate))
+        .limit(pageSize)
+        .offset((page - 1) * pageSize),
+
+      this.database
+        .select({
+          count: count(),
+        })
+        .from(this.table)
+        .where(whereClause)
+        .then((res) => res[0].count ?? 0),
+    ]);
+
+    return {
+      data: expenses,
+
+      total: totalResult,
+
+      page,
+
+      pageSize,
+
+      totalPages: Math.ceil(totalResult / pageSize),
+    };
   }
 
   public async delete(id: string): Promise<void> {
@@ -143,20 +173,34 @@ export class ExpenseService {
       .from(this.table)
       .where(eq(this.table.userId, userId));
 
-    const monthlyMap = new Map<string, number>();
+    const monthlyMap = new Map<
+      string,
+      {
+        month: number;
+        year: number;
+        total: number;
+      }
+    >();
 
     for (const expense of expenses) {
-      const month = new Date(expense.expenseDate).toLocaleString('default', {
-        month: 'short',
-      });
+      const date = new Date(expense.expenseDate);
 
-      monthlyMap.set(month, (monthlyMap.get(month) ?? 0) + expense.amount);
+      const month = date.getMonth() + 1;
+
+      const year = date.getFullYear();
+
+      const key = `${year}-${month}`;
+
+      const existing = monthlyMap.get(key);
+
+      monthlyMap.set(key, {
+        month,
+        year,
+        total: (existing?.total ?? 0) + expense.amount,
+      });
     }
 
-    return Array.from(monthlyMap.entries()).map(([month, total]) => ({
-      month,
-      total,
-    }));
+    return Array.from(monthlyMap.values());
   }
 
   private async getAllWithAmountAndCategoryByUserId(

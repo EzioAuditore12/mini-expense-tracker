@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { expenseSchema } from '@/db/tables/expense.table';
+import { expenseSchema } from '../expense.schema';
 
 export const getAllExpensesResponseSchema = z.object({
   data: expenseSchema.array(),
@@ -10,6 +10,4 @@ export const getAllExpensesResponseSchema = z.object({
   totalPages: z.number(),
 });
 
-export type GetAllExpensesResponse = z.infer<
-  typeof getAllExpensesResponseSchema
->;
+export type GetAllExpensesResponse = z.infer<typeof getAllExpensesResponseSchema>;
