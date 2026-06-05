@@ -11,6 +11,8 @@ export const highestExpenseSchema = z
 
 export const getExpenseSummaryResponseSchema = z.object({
   totalExpenses: z.number(),
+  totalTransactions: z.number(),
+  mostUsedCategory: categoryEnumSchema.nullable(),
   highestExpense: highestExpenseSchema,
 });
 

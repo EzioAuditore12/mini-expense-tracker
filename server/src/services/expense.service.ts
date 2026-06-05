@@ -126,25 +126,14 @@ export class ExpenseService {
   ): Promise<GetExpenseSummaryResponse> {
     const expenses = await this.getAllWithAmountAndCategoryByUserId(userId);
 
-    const totalExpenses = expenses.reduce(
-      (acc, expense) => acc + expense.amount,
-      0,
-    );
-
-    const highestExpense = expenses.reduce(
-      (max, expense) => (expense.amount > max.amount ? expense : max),
-      expenses[0],
-    );
-
     return {
-      totalExpenses,
+      totalExpenses: this.calculateTotalExpenses(expenses),
 
-      highestExpense: highestExpense
-        ? {
-            amount: highestExpense.amount,
-            category: highestExpense.category,
-          }
-        : null,
+      totalTransactions: expenses.length,
+
+      mostUsedCategory: this.calculateMostUsedCategory(expenses),
+
+      highestExpense: this.calculateHighestExpense(expenses),
     };
   }
 
@@ -201,7 +190,13 @@ export class ExpenseService {
       });
     }
 
-    return Array.from(monthlyMap.values());
+    return Array.from(monthlyMap.values()).sort((a, b) => {
+      if (a.year === b.year) {
+        return a.month - b.month;
+      }
+
+      return a.year - b.year;
+    });
   }
 
   public async getTotalSpentByUserId(
@@ -239,6 +234,60 @@ export class ExpenseService {
       .select({ amount: this.table.amount, category: this.table.category })
       .from(this.table)
       .where(eq(this.table.userId, userId));
+  }
+
+  private calculateTotalExpenses(expenses: Pick<Expense, 'amount'>[]): number {
+    return expenses.reduce((acc, expense) => acc + expense.amount, 0);
+  }
+
+  private calculateHighestExpense(
+    expenses: Pick<Expense, 'category' | 'amount'>[],
+  ): Pick<Expense, 'category' | 'amount'> | null {
+    if (expenses.length === 0) {
+      return null;
+    }
+
+    const highestExpense = expenses.reduce(
+      (max, expense) => (expense.amount > max.amount ? expense : max),
+      expenses[0],
+    );
+
+    return {
+      amount: highestExpense.amount,
+      category: highestExpense.category,
+    };
+  }
+
+  private calculateMostUsedCategory(
+    expenses: Pick<Expense, 'category'>[],
+  ): Category | null {
+    if (expenses.length === 0) {
+      return null;
+    }
+
+    const categoryCountMap = new Map<Category, number>();
+
+    for (const expense of expenses) {
+      categoryCountMap.set(
+        expense.category,
+
+        (categoryCountMap.get(expense.category) ?? 0) + 1,
+      );
+    }
+
+    let mostUsedCategory: Category | null = null;
+
+    let maxCount = 0;
+
+    for (const [category, count] of categoryCountMap) {
+      if (count > maxCount) {
+        maxCount = count;
+
+        mostUsedCategory = category;
+      }
+    }
+
+    return mostUsedCategory;
   }
 }
 

@@ -8,78 +8,78 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './app/__root';
-import { Route as mainLayoutRouteImport } from './app/(main)/layout';
-import { Route as authLayoutRouteImport } from './app/(auth)/layout';
-import { Route as mainProfilePageRouteImport } from './app/(main)/profile/page';
-import { Route as mainExpensePageRouteImport } from './app/(main)/expense/page';
-import { Route as maindashboardPageRouteImport } from './app/(main)/(dashboard)/page';
-import { Route as authRegisterPageRouteImport } from './app/(auth)/register/page';
-import { Route as authLoginPageRouteImport } from './app/(auth)/login/page';
+import { Route as rootRouteImport } from './app/__root'
+import { Route as mainLayoutRouteImport } from './app/(main)/layout'
+import { Route as authLayoutRouteImport } from './app/(auth)/layout'
+import { Route as mainProfilePageRouteImport } from './app/(main)/profile/page'
+import { Route as mainExpensePageRouteImport } from './app/(main)/expense/page'
+import { Route as maindashboardPageRouteImport } from './app/(main)/(dashboard)/page'
+import { Route as authRegisterPageRouteImport } from './app/(auth)/register/page'
+import { Route as authLoginPageRouteImport } from './app/(auth)/login/page'
 
 const mainLayoutRoute = mainLayoutRouteImport.update({
   id: '/(main)',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const authLayoutRoute = authLayoutRouteImport.update({
   id: '/(auth)',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const mainProfilePageRoute = mainProfilePageRouteImport.update({
   id: '/profile/',
   path: '/profile/',
   getParentRoute: () => mainLayoutRoute,
-} as any);
+} as any)
 const mainExpensePageRoute = mainExpensePageRouteImport.update({
   id: '/expense/',
   path: '/expense/',
   getParentRoute: () => mainLayoutRoute,
-} as any);
+} as any)
 const maindashboardPageRoute = maindashboardPageRouteImport.update({
   id: '/(dashboard)/',
   path: '/',
   getParentRoute: () => mainLayoutRoute,
-} as any);
+} as any)
 const authRegisterPageRoute = authRegisterPageRouteImport.update({
   id: '/register/',
   path: '/register/',
   getParentRoute: () => authLayoutRoute,
-} as any);
+} as any)
 const authLoginPageRoute = authLoginPageRouteImport.update({
   id: '/login/',
   path: '/login/',
   getParentRoute: () => authLayoutRoute,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/login/': typeof authLoginPageRoute;
-  '/register/': typeof authRegisterPageRoute;
-  '/': typeof maindashboardPageRoute;
-  '/expense/': typeof mainExpensePageRoute;
-  '/profile/': typeof mainProfilePageRoute;
+  '/login/': typeof authLoginPageRoute
+  '/register/': typeof authRegisterPageRoute
+  '/': typeof maindashboardPageRoute
+  '/expense/': typeof mainExpensePageRoute
+  '/profile/': typeof mainProfilePageRoute
 }
 export interface FileRoutesByTo {
-  '/login': typeof authLoginPageRoute;
-  '/register': typeof authRegisterPageRoute;
-  '/': typeof maindashboardPageRoute;
-  '/expense': typeof mainExpensePageRoute;
-  '/profile': typeof mainProfilePageRoute;
+  '/login': typeof authLoginPageRoute
+  '/register': typeof authRegisterPageRoute
+  '/': typeof maindashboardPageRoute
+  '/expense': typeof mainExpensePageRoute
+  '/profile': typeof mainProfilePageRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  '/(auth)': typeof authLayoutRouteWithChildren;
-  '/(main)': typeof mainLayoutRouteWithChildren;
-  '/(auth)/login/': typeof authLoginPageRoute;
-  '/(auth)/register/': typeof authRegisterPageRoute;
-  '/(main)/(dashboard)/': typeof maindashboardPageRoute;
-  '/(main)/expense/': typeof mainExpensePageRoute;
-  '/(main)/profile/': typeof mainProfilePageRoute;
+  __root__: typeof rootRouteImport
+  '/(auth)': typeof authLayoutRouteWithChildren
+  '/(main)': typeof mainLayoutRouteWithChildren
+  '/(auth)/login/': typeof authLoginPageRoute
+  '/(auth)/register/': typeof authRegisterPageRoute
+  '/(main)/(dashboard)/': typeof maindashboardPageRoute
+  '/(main)/expense/': typeof mainExpensePageRoute
+  '/(main)/profile/': typeof mainProfilePageRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: '/login/' | '/register/' | '/' | '/expense/' | '/profile/';
-  fileRoutesByTo: FileRoutesByTo;
-  to: '/login' | '/register' | '/' | '/expense' | '/profile';
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/login/' | '/register/' | '/' | '/expense/' | '/profile/'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/login' | '/register' | '/' | '/expense' | '/profile'
   id:
     | '__root__'
     | '/(auth)'
@@ -88,98 +88,102 @@ export interface FileRouteTypes {
     | '/(auth)/register/'
     | '/(main)/(dashboard)/'
     | '/(main)/expense/'
-    | '/(main)/profile/';
-  fileRoutesById: FileRoutesById;
+    | '/(main)/profile/'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  authLayoutRoute: typeof authLayoutRouteWithChildren;
-  mainLayoutRoute: typeof mainLayoutRouteWithChildren;
+  authLayoutRoute: typeof authLayoutRouteWithChildren
+  mainLayoutRoute: typeof mainLayoutRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/(main)': {
-      id: '/(main)';
-      path: '';
-      fullPath: '';
-      preLoaderRoute: typeof mainLayoutRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/(main)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof mainLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(auth)': {
-      id: '/(auth)';
-      path: '';
-      fullPath: '';
-      preLoaderRoute: typeof authLayoutRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/(auth)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof authLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(main)/profile/': {
-      id: '/(main)/profile/';
-      path: '/profile';
-      fullPath: '/profile/';
-      preLoaderRoute: typeof mainProfilePageRouteImport;
-      parentRoute: typeof mainLayoutRoute;
-    };
+      id: '/(main)/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof mainProfilePageRouteImport
+      parentRoute: typeof mainLayoutRoute
+    }
     '/(main)/expense/': {
-      id: '/(main)/expense/';
-      path: '/expense';
-      fullPath: '/expense/';
-      preLoaderRoute: typeof mainExpensePageRouteImport;
-      parentRoute: typeof mainLayoutRoute;
-    };
+      id: '/(main)/expense/'
+      path: '/expense'
+      fullPath: '/expense/'
+      preLoaderRoute: typeof mainExpensePageRouteImport
+      parentRoute: typeof mainLayoutRoute
+    }
     '/(main)/(dashboard)/': {
-      id: '/(main)/(dashboard)/';
-      path: '/';
-      fullPath: '/';
-      preLoaderRoute: typeof maindashboardPageRouteImport;
-      parentRoute: typeof mainLayoutRoute;
-    };
+      id: '/(main)/(dashboard)/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof maindashboardPageRouteImport
+      parentRoute: typeof mainLayoutRoute
+    }
     '/(auth)/register/': {
-      id: '/(auth)/register/';
-      path: '/register';
-      fullPath: '/register/';
-      preLoaderRoute: typeof authRegisterPageRouteImport;
-      parentRoute: typeof authLayoutRoute;
-    };
+      id: '/(auth)/register/'
+      path: '/register'
+      fullPath: '/register/'
+      preLoaderRoute: typeof authRegisterPageRouteImport
+      parentRoute: typeof authLayoutRoute
+    }
     '/(auth)/login/': {
-      id: '/(auth)/login/';
-      path: '/login';
-      fullPath: '/login/';
-      preLoaderRoute: typeof authLoginPageRouteImport;
-      parentRoute: typeof authLayoutRoute;
-    };
+      id: '/(auth)/login/'
+      path: '/login'
+      fullPath: '/login/'
+      preLoaderRoute: typeof authLoginPageRouteImport
+      parentRoute: typeof authLayoutRoute
+    }
   }
 }
 
 interface authLayoutRouteChildren {
-  authLoginPageRoute: typeof authLoginPageRoute;
-  authRegisterPageRoute: typeof authRegisterPageRoute;
+  authLoginPageRoute: typeof authLoginPageRoute
+  authRegisterPageRoute: typeof authRegisterPageRoute
 }
 
 const authLayoutRouteChildren: authLayoutRouteChildren = {
   authLoginPageRoute: authLoginPageRoute,
   authRegisterPageRoute: authRegisterPageRoute,
-};
+}
 
-const authLayoutRouteWithChildren = authLayoutRoute._addFileChildren(authLayoutRouteChildren);
+const authLayoutRouteWithChildren = authLayoutRoute._addFileChildren(
+  authLayoutRouteChildren,
+)
 
 interface mainLayoutRouteChildren {
-  maindashboardPageRoute: typeof maindashboardPageRoute;
-  mainExpensePageRoute: typeof mainExpensePageRoute;
-  mainProfilePageRoute: typeof mainProfilePageRoute;
+  maindashboardPageRoute: typeof maindashboardPageRoute
+  mainExpensePageRoute: typeof mainExpensePageRoute
+  mainProfilePageRoute: typeof mainProfilePageRoute
 }
 
 const mainLayoutRouteChildren: mainLayoutRouteChildren = {
   maindashboardPageRoute: maindashboardPageRoute,
   mainExpensePageRoute: mainExpensePageRoute,
   mainProfilePageRoute: mainProfilePageRoute,
-};
+}
 
-const mainLayoutRouteWithChildren = mainLayoutRoute._addFileChildren(mainLayoutRouteChildren);
+const mainLayoutRouteWithChildren = mainLayoutRoute._addFileChildren(
+  mainLayoutRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   authLayoutRoute: authLayoutRouteWithChildren,
   mainLayoutRoute: mainLayoutRouteWithChildren,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
