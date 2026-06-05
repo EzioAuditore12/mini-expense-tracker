@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { budgetSummaryApi } from '../../api/get-budget-summary.api';
-import type { BudgetSummaryParam } from '../../schemas/budget-summary/param.schema';
+import { budgetSummaryApi } from '../../api/budget/summary.api';
+import type { BudgetSummaryParam } from '../../schemas/budget/summary/param.schema';
 
 export const USE_GET_BUDGET_QUERY_KEY = 'budget-summary';
 

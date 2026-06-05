@@ -54,29 +54,6 @@ export class BudgetController {
         'Either the budget does not exist or creator and user not same ',
       );
 
-    const existingBudget = await this.budgetService.findOne(budgetId);
-    if (!existingBudget) {
-      throw new NotFoundError('No Such Record with id for this budget exists');
-    }
-
-    const category = body.category ?? existingBudget.category;
-    const month = body.month ?? existingBudget.month;
-    const year = body.year ?? existingBudget.year;
-
-    const isConflict = await this.budgetService.checkUniqueConstraint(
-      userId,
-      category,
-      month,
-      year,
-      budgetId,
-    );
-
-    if (isConflict) {
-      throw new ConflictError(
-        'A budget for this category, month, and year already exists',
-      );
-    }
-
     const result = await this.budgetService.update(budgetId, body);
     return res.status(StatusCodes.ACCEPTED).send(result);
   };

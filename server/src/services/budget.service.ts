@@ -190,16 +190,12 @@ export class BudgetService {
       const budgetStatus = this.setBudgetStatus(percentage);
 
       return {
+        id: budget.id,
         category: budget.category,
-
         limitAmount: budget.limitAmount,
-
         spent,
-
         remaining,
-
         percentage,
-
         status: budgetStatus,
       };
     });

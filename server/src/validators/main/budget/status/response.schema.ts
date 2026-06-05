@@ -9,7 +9,7 @@ export const budgetStatusEnumSchema = z.enum([
 ]);
 
 export const budgetStatusSchema = budgetSchema
-  .pick({ category: true, limitAmount: true })
+  .pick({ id: true, category: true, limitAmount: true })
   .extend({
     spent: z.number(),
     remaining: z.number(),

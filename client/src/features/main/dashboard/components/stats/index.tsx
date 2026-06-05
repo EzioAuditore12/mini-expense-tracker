@@ -3,7 +3,7 @@ import type { ComponentProps } from 'react';
 
 import { DashboardStatsCard } from './card';
 
-import type { GetExpenseSummaryResponse } from '../../schemas/expense-summary/response.schema';
+import type { GetExpenseSummaryResponse } from '../../schemas/expense/summary/response.schema';
 
 import { cn } from '@/lib/utils';
 

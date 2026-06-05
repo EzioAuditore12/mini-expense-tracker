@@ -20,7 +20,7 @@ import {
   type ChartConfig,
 } from '@/components/ui/chart';
 
-import type { GetExpenseCategorySummaryResponse } from '../../schemas/expense-category-summary/response.schema';
+import type { GetExpenseCategorySummaryResponse } from '../../schemas/expense/category-summary/response.schema';
 import { cn } from '@/lib/utils';
 
 interface ExpensesChartCardProps extends ComponentProps<typeof Card> {

@@ -1,17 +1,26 @@
 import type { ComponentProps } from 'react';
+import { Pencil, Trash2 } from 'lucide-react';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-
+import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 
 import { cn } from '@/lib/utils';
-import type { BudgetSummaryResponse } from '../schemas/budget-summary/response.schema';
+import type { BudgetSummaryResponse } from '../../schemas/budget/summary/response.schema';
 
-interface BudgetOverviewProps extends ComponentProps<typeof Card> {
+interface BudgetOverviewCardProps extends ComponentProps<typeof Card> {
   data?: BudgetSummaryResponse;
+  onEdit?: (id: string) => void;
+  onDelete?: (id: string) => void;
 }
 
-export function BudgetOverview({ className, data = [], ...props }: BudgetOverviewProps) {
+export function BudgetOverviewCard({
+  className,
+  data = [],
+  onEdit,
+  onDelete,
+  ...props
+}: BudgetOverviewCardProps) {
   return (
     <Card className={cn(className)} {...props}>
       <CardHeader>
@@ -32,7 +41,7 @@ export function BudgetOverview({ className, data = [], ...props }: BudgetOvervie
                 </p>
               </div>
 
-              <div>
+              <div className="flex items-center gap-1">
                 <span
                   className={cn(
                     'rounded-full px-2 py-1 text-xs font-medium',
@@ -45,6 +54,22 @@ export function BudgetOverview({ className, data = [], ...props }: BudgetOvervie
                   )}>
                   {budget.status}
                 </span>
+
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => onEdit?.(budget.id)}>
+                  <Pencil className="h-4 w-4" />
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-red-500 hover:bg-red-50 hover:text-red-600"
+                  onClick={() => onDelete?.(budget.id)}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </div>
             </div>
 

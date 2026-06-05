@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getExpenseCategorySummaryApi } from '../../api/get-expense-category-summary.api';
+import { getExpenseCategorySummaryApi } from '../../api/expense/category-summary.api';
 
 export const USE_GET_EXPENSE_CATEGORY_SUMMARY_QUERY_KEY = 'expense-category-summary';
 

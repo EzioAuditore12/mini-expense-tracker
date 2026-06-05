@@ -64,9 +64,9 @@ export function EditExpenseFormDialog({
             EditExpenseForm.handleSubmit();
           }}>
           <DialogHeader>
-            <DialogTitle>Add Expense</DialogTitle>
+            <DialogTitle>Update Expense</DialogTitle>
 
-            <DialogDescription>Add a new expense transaction.</DialogDescription>
+            <DialogDescription>Update an expense transaction.</DialogDescription>
           </DialogHeader>
 
           <FieldGroup className="mt-6">

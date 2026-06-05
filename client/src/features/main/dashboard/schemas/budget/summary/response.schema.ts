@@ -1,11 +1,12 @@
 import { z } from 'zod';
 
-import { budgetSchema } from '../budget.schema';
+import { budgetSchema } from '../../budget.schema';
 
 export const budgetStatusSchema = z.enum(['ON_TRACK', 'APPROACHING_LIMIT', 'OVER_BUDGET']);
 
 const budgetSummarySchema = budgetSchema
   .pick({
+    id: true,
     category: true,
     limitAmount: true,
   })
