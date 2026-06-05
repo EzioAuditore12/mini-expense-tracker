@@ -14,6 +14,7 @@ import { healthCheckRouter } from '@/routers/health-check.router';
 import { authRouter } from './routers/auth.router';
 import { userRouter } from './routers/user.router';
 import { expenseRouter } from './routers/expense.router';
+import { budgetRouter } from './routers/budget.router';
 
 const app: Express = express();
 
@@ -35,6 +36,7 @@ app.use('/health-check', healthCheckRouter);
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
 app.use('/expense', expenseRouter);
+app.use('/budget', budgetRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

@@ -19,6 +19,7 @@
     "db:up": "npx drizzle-kit up",
     "db:studio": "npx drizzle-kit studio --verbose",
     "seed:expense": "node --import=tsx seeders/expense.seeder.ts",
+    "seed:budget": "node --import=tsx seeders/budget.seeder.ts",
     "test": "vitest run",
     "test:cov": "vitest run --coverage",
     "format": "prettier --write \"src/**/*.{ts,tsx}\""

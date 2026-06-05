@@ -13,6 +13,7 @@ import type { GetAllExpensesResponse } from '@/validators/main/expense/get-all/r
 import type { GetExpenseSummaryResponse } from '@/validators/main/expense/get-summary/response.schema';
 import type { GetCategorySummaryResponse } from '@/validators/main/expense/get-category-summary/response.schema';
 import type { GetMonthlyTrendResponse } from '@/validators/main/expense/get-monthly-trend/response.schema';
+import { Category } from '@/db/tables/enums/category.enum';
 
 export class ExpenseService {
   private readonly database = db;
@@ -201,6 +202,34 @@ export class ExpenseService {
     }
 
     return Array.from(monthlyMap.values());
+  }
+
+  public async getTotalSpentByUserId(
+    userId: string,
+    data: { startDate: Date; endDate: Date },
+  ): Promise<{ category: Category; spent: number }[]> {
+    const { startDate, endDate } = data;
+
+    const totalSpents = await this.database
+      .select({
+        category: this.table.category,
+        spent: sum(this.table.amount),
+      })
+      .from(this.table)
+      .where(
+        and(
+          eq(this.table.userId, userId),
+          gte(this.table.expenseDate, startDate),
+          lte(this.table.expenseDate, endDate),
+        ),
+      )
+      .groupBy(this.table.category);
+
+    return totalSpents.map((item) => ({
+      category: item.category,
+
+      spent: Number(item.spent ?? 0),
+    }));
   }
 
   private async getAllWithAmountAndCategoryByUserId(
