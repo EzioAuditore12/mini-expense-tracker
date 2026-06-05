@@ -19,7 +19,7 @@ import {
   type ChartConfig,
 } from '@/components/ui/chart';
 
-import type { GetExpenseMonthlyTrendResponse } from '../../schemas/get-expense-monthly-trend/response.schema';
+import type { GetExpenseMonthlyTrendResponse } from '../../schemas/expense-monthly-trend/response.schema';
 import { cn } from '@/lib/utils';
 
 interface MonthlySpendingTrendCardProps extends ComponentProps<typeof Card> {

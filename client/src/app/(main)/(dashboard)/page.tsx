@@ -8,6 +8,8 @@ import { useGetExpenseMonthlyTrend } from '@/features/main/dashboard/hooks/queri
 import { useGetExpenseSummary } from '@/features/main/dashboard/hooks/queries/use-get-expense-summary';
 import { DashboardStatsSection } from '@/features/main/dashboard/components/stats';
 import { MonthlySpendingTrendCard } from '@/features/main/dashboard/components/chart-cards/monthly-spending-trends';
+import { useGetBudgetSummary } from '@/features/main/dashboard/hooks/queries/use-get-budget-summary';
+import { BudgetOverview } from '@/features/main/dashboard/components/budget-overview-card';
 
 export const Route = createFileRoute('/(main)/(dashboard)/')({
   component: RouteComponent,
@@ -18,7 +20,10 @@ function RouteComponent() {
   const { data: monthlyTrends } = useGetExpenseMonthlyTrend();
   const { data: expenseSummary } = useGetExpenseSummary();
 
-  console.log(expenseSummary);
+  const { data: budgetSummary } = useGetBudgetSummary({
+    month: 6,
+    year: 2026,
+  });
 
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -31,6 +36,8 @@ function RouteComponent() {
 
         <MonthlySpendingTrendCard data={monthlyTrends} />
       </section>
+
+      <BudgetOverview data={budgetSummary} />
     </div>
   );
 }

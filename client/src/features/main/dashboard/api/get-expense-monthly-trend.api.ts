@@ -1,5 +1,5 @@
 import { authenticatedTypedFetch } from '@/lib/auth.fetch';
-import { getExpenseMonthlyTrendResponseSchema } from '../schemas/get-expense-monthly-trend/response.schema';
+import { getExpenseMonthlyTrendResponseSchema } from '../schemas/expense-monthly-trend/response.schema';
 
 export const getExpenseMonthlyTrendApi = async () => {
   return await authenticatedTypedFetch({

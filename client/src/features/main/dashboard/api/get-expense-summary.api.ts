@@ -1,5 +1,5 @@
 import { authenticatedTypedFetch } from '@/lib/auth.fetch';
-import { getExpenseSummaryResponseSchema } from '../schemas/get-expense-summary/response.schema';
+import { getExpenseSummaryResponseSchema } from '../schemas/expense-summary/response.schema';
 
 export const getExpenseSummaryApi = async () => {
   return await authenticatedTypedFetch({
