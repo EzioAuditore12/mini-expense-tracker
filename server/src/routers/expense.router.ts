@@ -20,6 +20,8 @@ import { getExpenseSummaryResponseSchema } from '@/validators/main/expense/get-s
 import { getCategorySummaryResponseSchema } from '@/validators/main/expense/get-category-summary/response.schema';
 import { getMonthlyTrendResponseSchema } from '@/validators/main/expense/get-monthly-trend/response.schema';
 import { getAllExpensesResponseSchema } from '@/validators/main/expense/get-all/response';
+import { expenseDeleteResponseSchema } from '@/validators/main/expense/delete/response';
+import { expenseDeleteParamSchema } from '@/validators/main/expense/delete/request';
 
 export const expenseRegistry = new OpenAPIRegistry();
 export const expenseRouter: Router = express.Router();
@@ -137,14 +139,14 @@ expenseRegistry.registerPath({
   path: '/expense/{id}',
   tags: ['Expense'],
   request: {
-    params: expenseParamSchema,
+    params: expenseDeleteParamSchema,
   },
-  responses: createApiResponse(updateExpenseResponseSchema, 'Success'),
+  responses: createApiResponse(expenseDeleteResponseSchema, 'Success'),
 });
 
 expenseRouter.delete(
   '/:id',
   authMiddleware,
-  validate({ params: expenseParamSchema }),
+  validate({ params: expenseDeleteParamSchema }),
   expenseController.delete,
 );

@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { endOfToday, format } from 'date-fns';
 import { ChevronDownIcon } from 'lucide-react';
 import { Activity, type ComponentProps } from 'react';
 
@@ -13,9 +13,15 @@ import { FieldError } from './field-error';
 
 interface DatePickerFieldProps extends ComponentProps<typeof Button> {
   placeholder?: string;
+  disableFutureDates?: boolean;
 }
 
-export const DatePickerField = ({ className, placeholder, ...props }: DatePickerFieldProps) => {
+export const DatePickerField = ({
+  className,
+  placeholder,
+  disableFutureDates,
+  ...props
+}: DatePickerFieldProps) => {
   const field = useFieldContext<Date>();
 
   const hasError = field.state.meta.errors.length > 0;
@@ -52,6 +58,7 @@ export const DatePickerField = ({ className, placeholder, ...props }: DatePicker
               }
             }}
             defaultMonth={field.state.value}
+            disabled={disableFutureDates ? (date) => date > endOfToday() : undefined}
           />
         </PopoverContent>
       </Popover>

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { isNumeric } from 'validator';
+import { endOfToday } from 'date-fns';
 
 import { expenseSchema } from '../expense.schema';
 
@@ -11,8 +12,13 @@ export const createExpenseParamSchema = expenseSchema
     note: true,
   })
   .extend({
-    expenseDate: z.date(),
-    amount: z.string().refine((val) => isNumeric(val), { error: 'Amount must be numeric' }),
+    expenseDate: z.date().max(endOfToday(), 'Expense date cannot be in the future'),
+    amount: z
+      .string()
+      .refine((val) => isNumeric(val), { error: 'Amount must be numeric' })
+      .refine((val) => Number(val) > 0, {
+        message: 'Amount must be positive',
+      }),
   });
 
 export type CreateExpenseParam = z.infer<typeof createExpenseParamSchema>;

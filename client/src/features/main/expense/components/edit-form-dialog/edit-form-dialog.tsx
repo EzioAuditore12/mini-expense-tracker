@@ -1,5 +1,4 @@
-import { useState, type ComponentProps } from 'react';
-import { PlusIcon } from 'lucide-react';
+import type { Dispatch, SetStateAction } from 'react';
 
 import {
   Dialog,
@@ -9,19 +8,19 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Field, FieldGroup } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 
-import { cn } from '@/lib/utils';
-
 import { useAppForm } from '@/hooks/use-app-form';
 
-import { createExpenseParamSchema, type CreateExpenseParam } from '../schemas/create/param.schema';
+import { categoryEnum } from '../../schemas/enums/categrory-enum.schema';
 
-import { categoryEnum } from '../schemas/enums/categrory-enum.schema';
+import {
+  updateExpenseParamSchema,
+  type UpdateExpenseParam,
+} from '../../schemas/update/param.schema';
 
 const categoryItems = categoryEnum.map((category) => ({
   label: category.charAt(0) + category.slice(1).toLowerCase(),
@@ -29,57 +28,40 @@ const categoryItems = categoryEnum.map((category) => ({
   value: category,
 }));
 
-interface AddExpenseFormDialogProps extends ComponentProps<typeof Button> {
+interface EditExpenseFormDialogProps {
+  open: boolean;
+  onOpenChange: Dispatch<SetStateAction<boolean>>;
+  defaultValues: UpdateExpenseParam;
   isPending: boolean;
-  handleSubmit: (data: CreateExpenseParam) => void;
+  handleSubmit: (data: UpdateExpenseParam) => void;
 }
 
-export function AddExpenseFormDialog({
-  className,
+export function EditExpenseFormDialog({
+  open,
+  defaultValues,
+  onOpenChange,
   handleSubmit,
   isPending,
-  ...props
-}: AddExpenseFormDialogProps) {
-  const [open, setOpen] = useState<boolean>(false);
-
-  const AddExpenseForm = useAppForm({
+}: EditExpenseFormDialogProps) {
+  const EditExpenseForm = useAppForm({
     validators: {
-      onChange: createExpenseParamSchema,
+      onChange: updateExpenseParamSchema,
     },
-
-    defaultValues: {
-      amount: '0',
-
-      category: 'OTHER',
-
-      expenseDate: new Date(),
-
-      note: null,
-    } as CreateExpenseParam,
-
+    defaultValues,
     onSubmit: async ({ value }) => {
       handleSubmit(value);
 
-      AddExpenseForm.reset();
-
-      setOpen(false);
+      onOpenChange(false);
     },
   });
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className={cn(className)} size="lg" {...props}>
-          <PlusIcon />
-          Add Expense
-        </Button>
-      </DialogTrigger>
-
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-sm">
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            AddExpenseForm.handleSubmit();
+            EditExpenseForm.handleSubmit();
           }}>
           <DialogHeader>
             <DialogTitle>Add Expense</DialogTitle>
@@ -91,17 +73,17 @@ export function AddExpenseFormDialog({
             <Field>
               <Label>Amount</Label>
 
-              <AddExpenseForm.AppField name="amount">
+              <EditExpenseForm.AppField name="amount">
                 {(field) => (
                   <field.InputField className="mt-2" placeholder="Amount" type="number" />
                 )}
-              </AddExpenseForm.AppField>
+              </EditExpenseForm.AppField>
             </Field>
 
             <Field>
               <Label>Category</Label>
 
-              <AddExpenseForm.AppField name="category">
+              <EditExpenseForm.AppField name="category">
                 {(field) => (
                   <field.SelectField
                     items={categoryItems}
@@ -109,23 +91,23 @@ export function AddExpenseFormDialog({
                     placeholder="Select category"
                   />
                 )}
-              </AddExpenseForm.AppField>
+              </EditExpenseForm.AppField>
             </Field>
 
             <Field>
               <Label>Expense Date</Label>
 
-              <AddExpenseForm.AppField name="expenseDate">
+              <EditExpenseForm.AppField name="expenseDate">
                 {(field) => <field.DatePickerField disableFutureDates className="mt-2" />}
-              </AddExpenseForm.AppField>
+              </EditExpenseForm.AppField>
             </Field>
 
             <Field>
               <Label>Note</Label>
 
-              <AddExpenseForm.AppField name="note">
+              <EditExpenseForm.AppField name="note">
                 {(field) => <field.InputField className="mt-2" placeholder="Note..." type="text" />}
-              </AddExpenseForm.AppField>
+              </EditExpenseForm.AppField>
             </Field>
           </FieldGroup>
 

@@ -30,6 +30,7 @@
     "@scalar/express-api-reference": "^0.9.20",
     "better-sqlite3": "^12.10.0",
     "cors": "^2.8.6",
+    "date-fns": "^4.4.0",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
     "drizzle-zod": "^0.8.3",

@@ -8,6 +8,7 @@ import type { CreateExpenseRequest } from '@/validators/main/expense/create/requ
 import type { UpdateExpenseRequest } from '@/validators/main/expense/update/request';
 import type { ExpenseParamRequest } from '@/validators/main/expense/param';
 import type { GetAllExpensesRequest } from '@/validators/main/expense/get-all/request';
+import type { ExpenseDeleteParamRequest } from '@/validators/main/expense/delete/request';
 
 export class ExpenseController {
   private readonly expenseService = expenseService;
@@ -59,7 +60,7 @@ export class ExpenseController {
     return res.status(StatusCodes.ACCEPTED).send(result);
   };
 
-  public delete = async (req: ExpenseParamRequest, res: Response) => {
+  public delete = async (req: ExpenseDeleteParamRequest, res: Response) => {
     const userId = req.user?.id!;
     const expenseId = req.params.id;
 

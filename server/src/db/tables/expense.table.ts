@@ -11,6 +11,7 @@ import {
   createSelectSchema,
   createUpdateSchema,
 } from 'drizzle-zod';
+import { endOfToday } from 'date-fns';
 
 import { SnowFlakeId } from '@/utils/snowflake';
 
@@ -59,7 +60,7 @@ export const expenseSchema = createSelectSchema(expenseTable);
 export const expenseInsertSchema = createInsertSchema(expenseTable, {
   amount: z.coerce.number().positive('Amount should be greater than 0'),
 
-  expenseDate: z.coerce.date().max(new Date(), {
+  expenseDate: z.coerce.date().max(endOfToday(), {
     message: 'Expense date cannot be in the future',
   }),
 });
@@ -70,9 +71,9 @@ export const expenseUpdateSchema = createUpdateSchema(expenseTable, {
     .positive('Amount should be greater than 0')
     .optional(),
 
-  expenseDate: z
+  expenseDate: z.coerce
     .date()
-    .max(new Date(), {
+    .max(endOfToday(), {
       message: 'Expense date cannot be in the future',
     })
     .optional(),

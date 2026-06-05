@@ -8,6 +8,7 @@ export const updateExpenseSchema = expenseUpdateSchema.pick({
   amount: true,
   expenseDate: true,
   note: true,
+  category: true,
 });
 
 export type UpdateExpenseBody = z.infer<typeof updateExpenseSchema>;
