@@ -52,7 +52,8 @@ expenseRouter.post(
 expenseRegistry.registerPath({
   method: 'get',
   path: `${ROUTE_PATHS.EXPENSE}/summary`,
-  description: 'Get a spending summary (total, average, count) for the authenticated user.',
+  description:
+    'Get a spending summary (total, average, count) for the authenticated user.',
   tags: [TAGS.EXPENSE],
   request: {
     headers: authHeaderSchema,
@@ -69,7 +70,8 @@ expenseRouter.get(
 expenseRegistry.registerPath({
   method: 'get',
   path: `${ROUTE_PATHS.EXPENSE}/category-summary`,
-  description: 'Get expense totals grouped by category for the authenticated user.',
+  description:
+    'Get expense totals grouped by category for the authenticated user.',
   tags: [TAGS.EXPENSE],
   request: {
     headers: authHeaderSchema,
@@ -86,7 +88,8 @@ expenseRouter.get(
 expenseRegistry.registerPath({
   method: 'get',
   path: `${ROUTE_PATHS.EXPENSE}/monthly-trend`,
-  description: 'Get month-over-month spending trends for the authenticated user.',
+  description:
+    'Get month-over-month spending trends for the authenticated user.',
   tags: [TAGS.EXPENSE],
   request: {
     headers: authHeaderSchema,
@@ -103,7 +106,8 @@ expenseRouter.get(
 expenseRegistry.registerPath({
   method: 'get',
   path: ROUTE_PATHS.EXPENSE,
-  description: 'List all expenses for the authenticated user with optional filtering, sorting, and pagination.',
+  description:
+    'List all expenses for the authenticated user with optional filtering, sorting, and pagination.',
   tags: [TAGS.EXPENSE],
   request: {
     headers: authHeaderSchema,
@@ -123,7 +127,7 @@ expenseRouter.get(
 expenseRegistry.registerPath({
   method: 'get',
   path: `${ROUTE_PATHS.EXPENSE}/export`,
-  description: 'Export the authenticated user\'s expenses as a CSV file.',
+  description: "Export the authenticated user's expenses as a CSV file.",
   tags: [TAGS.EXPENSE],
   request: {
     headers: authHeaderSchema,
@@ -160,7 +164,8 @@ expenseRouter.get(
 expenseRegistry.registerPath({
   method: 'patch',
   path: `${ROUTE_PATHS.EXPENSE}/{id}`,
-  description: 'Update an existing expense by its ID. Only the fields provided will be modified.',
+  description:
+    'Update an existing expense by its ID. Only the fields provided will be modified.',
   tags: [TAGS.EXPENSE],
   request: {
     headers: authHeaderSchema,

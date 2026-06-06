@@ -38,7 +38,8 @@ authRouter.post(
 authRegistry.registerPath({
   method: 'post',
   path: `${ROUTE_PATHS.AUTH}/login`,
-  description: 'Authenticate with email and password to receive access and refresh tokens.',
+  description:
+    'Authenticate with email and password to receive access and refresh tokens.',
   tags: [TAGS.AUTH],
   request: {
     body: requestBody(loginRequestSchema),

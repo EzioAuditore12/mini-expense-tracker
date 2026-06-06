@@ -13,6 +13,8 @@ extendZodWithOpenApi(z);
 export const authHeaderSchema = z.object({
   Authorization: z
     .string()
-    .describe('Bearer JWT access token (pre-filled with a test token for convenience)')
+    .describe(
+      'Bearer JWT access token (pre-filled with a test token for convenience)',
+    )
     .openapi({ example: `Bearer ${env.TEST_ACESS_TOKEN}` }),
 });

@@ -49,7 +49,8 @@ budgetRouter.post(
 budgetRegistry.registerPath({
   method: 'get',
   path: ROUTE_PATHS.BUDGET,
-  description: 'List all budgets for the authenticated user with optional filtering and pagination.',
+  description:
+    'List all budgets for the authenticated user with optional filtering and pagination.',
   tags: [TAGS.BUDGET],
   request: {
     headers: authHeaderSchema,
@@ -69,7 +70,8 @@ budgetRouter.get(
 budgetRegistry.registerPath({
   method: 'get',
   path: `${ROUTE_PATHS.BUDGET}/summary`,
-  description: 'Get the current spending status of each budget (spent vs. limit) for a given period.',
+  description:
+    'Get the current spending status of each budget (spent vs. limit) for a given period.',
   tags: [TAGS.BUDGET],
   request: {
     headers: authHeaderSchema,
@@ -106,7 +108,8 @@ budgetRouter.get(
 budgetRegistry.registerPath({
   method: 'patch',
   path: `${ROUTE_PATHS.BUDGET}/{id}`,
-  description: 'Update an existing budget by its ID. Only the fields provided will be modified.',
+  description:
+    'Update an existing budget by its ID. Only the fields provided will be modified.',
   tags: [TAGS.BUDGET],
   request: {
     headers: authHeaderSchema,

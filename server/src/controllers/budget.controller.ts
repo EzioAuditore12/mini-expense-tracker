@@ -18,7 +18,6 @@ import { BudgetStatusRequest } from '@/validators/main/budget/status/request.sch
 export class BudgetController {
   private readonly budgetService = budgetService;
 
-  
   public create = async (req: CreateBudgetRequest, res: Response) => {
     const userId = req.user?.id!;
     const body = req.body;

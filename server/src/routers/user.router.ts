@@ -18,7 +18,7 @@ export const userRouter: Router = express.Router();
 userRegistry.registerPath({
   method: 'get',
   path: `${ROUTE_PATHS.USER}/profile`,
-  description: 'Retrieve the authenticated user\'s profile information.',
+  description: "Retrieve the authenticated user's profile information.",
   tags: [TAGS.USER],
   request: {
     headers: authHeaderSchema,
@@ -31,7 +31,7 @@ userRouter.get('/profile', authMiddleware, userController.getProfile);
 userRegistry.registerPath({
   method: 'get',
   path: `${ROUTE_PATHS.USER}/{id}`,
-  description: 'Retrieve a user\'s public profile by their unique ID.',
+  description: "Retrieve a user's public profile by their unique ID.",
   tags: [TAGS.USER],
   request: { params: z.object({ id: z.uuid() }) },
   responses: createApiResponse(publicUserSchema, 'Success'),
