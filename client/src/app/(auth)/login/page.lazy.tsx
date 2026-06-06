@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { createFileRoute } from '@tanstack/react-router';
+import { createLazyFileRoute } from '@tanstack/react-router';
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Stack } from '@/components/ui/stack';
@@ -10,7 +10,7 @@ import { useLoginForm } from '@/features/auth/login/hooks/use-login-form';
 import { LoginBanner } from '@/features/auth/login/components/banner';
 import { LoginForm } from '@/features/auth/login/components/form';
 
-export const Route = createFileRoute('/(auth)/login/')({
+export const Route = createLazyFileRoute('/(auth)/login/')({
   component: RouteComponent,
 });
 

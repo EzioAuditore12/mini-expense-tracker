@@ -4,6 +4,7 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { GlobalAlertDialog } from '@/components/global-alert-dialog';
 
 const RootLayout = () => (
   <>
@@ -11,6 +12,7 @@ const RootLayout = () => (
       <Outlet />
     </TooltipProvider>
     <Toaster />
+    <GlobalAlertDialog />
     <TanStackRouterDevtools />
   </>
 );

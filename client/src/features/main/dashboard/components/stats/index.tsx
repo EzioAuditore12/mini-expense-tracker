@@ -9,12 +9,19 @@ import { cn } from '@/lib/utils';
 
 interface DashboardStatsSectionProps extends ComponentProps<'section'> {
   data: GetExpenseSummaryResponse;
+  isFetching?: boolean;
 }
 
-export function DashboardStatsSection({ className, data, ...props }: DashboardStatsSectionProps) {
+export function DashboardStatsSection({
+  className,
+  data,
+  isFetching = false,
+  ...props
+}: DashboardStatsSectionProps) {
   return (
     <section className={cn('grid gap-4', className)} {...props}>
       <DashboardStatsCard
+        isFetching={isFetching}
         data={{
           title: 'Total Expenses',
 
@@ -29,6 +36,7 @@ export function DashboardStatsSection({ className, data, ...props }: DashboardSt
       />
 
       <DashboardStatsCard
+        isFetching={isFetching}
         data={{
           title: 'Highest Expense',
 
@@ -43,6 +51,7 @@ export function DashboardStatsSection({ className, data, ...props }: DashboardSt
       />
 
       <DashboardStatsCard
+        isFetching={isFetching}
         data={{
           title: 'Transactions Count',
 
@@ -57,6 +66,7 @@ export function DashboardStatsSection({ className, data, ...props }: DashboardSt
       />
 
       <DashboardStatsCard
+        isFetching={isFetching}
         data={{
           title: 'Most Used Category',
 
@@ -72,3 +82,4 @@ export function DashboardStatsSection({ className, data, ...props }: DashboardSt
     </section>
   );
 }
+export { DashboardStatsSectionSkeleton } from './skeleton';

@@ -22,9 +22,11 @@ import {
 
 import type { GetExpenseCategorySummaryResponse } from '../../schemas/expense/category-summary/response.schema';
 import { cn } from '@/lib/utils';
+import { Spinner } from '@/components/ui/spinner';
 
 interface ExpensesChartCardProps extends ComponentProps<typeof Card> {
   data?: GetExpenseCategorySummaryResponse;
+  isFetching?: boolean;
 }
 
 const chartConfig = {
@@ -78,7 +80,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ExpensesChartCard({ className, data = [], ...props }: ExpensesChartCardProps) {
+export function ExpensesChartCard({
+  className,
+  data = [],
+  isFetching = false,
+  ...props
+}: ExpensesChartCardProps) {
   const chartData = data.map((item) => ({
     ...item,
 
@@ -88,7 +95,13 @@ export function ExpensesChartCard({ className, data = [], ...props }: ExpensesCh
   const totalExpenses = data.reduce((acc, item) => acc + item.total, 0);
 
   return (
-    <Card className={cn('flex flex-col', className)} {...props}>
+    <Card className={cn('relative flex flex-col', className)} {...props}>
+      {isFetching && (
+        <div className="bg-background/80 absolute top-2.5 left-2.5 z-20 flex items-center justify-center rounded-full border p-1 shadow-sm backdrop-blur-sm">
+          <Spinner className="text-primary h-3 w-3" />
+        </div>
+      )}
+
       <CardHeader className="items-center pb-0">
         <CardTitle>Expenses by Category</CardTitle>
 

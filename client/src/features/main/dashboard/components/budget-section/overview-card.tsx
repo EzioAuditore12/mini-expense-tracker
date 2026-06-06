@@ -7,11 +7,13 @@ import { Progress } from '@/components/ui/progress';
 
 import { cn } from '@/lib/utils';
 import type { BudgetSummaryResponse } from '../../schemas/budget/summary/response.schema';
+import { Spinner } from '@/components/ui/spinner';
 
 interface BudgetOverviewCardProps extends ComponentProps<typeof Card> {
   data?: BudgetSummaryResponse;
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
+  isFetching?: boolean;
 }
 
 export function BudgetOverviewCard({
@@ -19,10 +21,17 @@ export function BudgetOverviewCard({
   data = [],
   onEdit,
   onDelete,
+  isFetching = false,
   ...props
 }: BudgetOverviewCardProps) {
   return (
-    <Card className={cn(className)} {...props}>
+    <Card className={cn('relative', className)} {...props}>
+      {isFetching && (
+        <div className="bg-background/80 absolute top-2.5 left-2.5 z-20 flex items-center justify-center rounded-full border p-1 shadow-sm backdrop-blur-sm">
+          <Spinner className="text-primary h-3 w-3" />
+        </div>
+      )}
+
       <CardHeader>
         <CardTitle>Budget Overview</CardTitle>
 

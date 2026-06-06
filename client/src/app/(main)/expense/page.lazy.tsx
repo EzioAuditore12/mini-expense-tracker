@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createLazyFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import {
@@ -22,7 +22,9 @@ import { useEditExpense } from '@/features/main/expense/hooks/mutations/use-edit
 import type { Expense } from '@/features/main/expense/schemas/expense.schema';
 import { useExportExpenses } from '@/features/main/expense/hooks/queries/use-export-expenses';
 
-export const Route = createFileRoute('/(main)/expense/')({
+import { ExpensePageSkeleton } from '@/features/main/expense/components/skeleton';
+
+export const Route = createLazyFileRoute('/(main)/expense/')({
   component: RouteComponent,
 });
 
@@ -42,9 +44,7 @@ function RouteComponent() {
   const { mutate: editExpense, isPending: isEditPending } = useEditExpense();
   const { exportExpenses, isExporting } = useExportExpenses();
 
-  if (isLoading) return <div>Loading..</div>;
-
-  console.log(data);
+  if (isLoading) return <ExpensePageSkeleton />;
 
   return (
     <div className="flex flex-col gap-6 p-6">

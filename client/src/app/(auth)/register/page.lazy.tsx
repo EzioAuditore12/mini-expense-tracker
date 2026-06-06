@@ -3,9 +3,9 @@ import { Stack } from '@/components/ui/stack';
 import { H2 } from '@/components/ui/typography';
 import { RegisterForm } from '@/features/auth/register/components/form';
 import { useRegisterForm } from '@/features/auth/register/hooks/use-register-form';
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createLazyFileRoute, Link } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/(auth)/register/')({
+export const Route = createLazyFileRoute('/(auth)/register/')({
   component: RouteComponent,
 });
 

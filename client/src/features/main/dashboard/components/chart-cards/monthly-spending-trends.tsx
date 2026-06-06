@@ -21,9 +21,11 @@ import {
 
 import type { GetExpenseMonthlyTrendResponse } from '../../schemas/expense/monthly-trend/response.schema';
 import { cn } from '@/lib/utils';
+import { Spinner } from '@/components/ui/spinner';
 
 interface MonthlySpendingTrendCardProps extends ComponentProps<typeof Card> {
   data?: GetExpenseMonthlyTrendResponse;
+  isFetching?: boolean;
 }
 
 const chartConfig = {
@@ -37,6 +39,7 @@ const chartConfig = {
 export function MonthlySpendingTrendCard({
   className,
   data = [],
+  isFetching = false,
   ...props
 }: MonthlySpendingTrendCardProps) {
   const chartData = data.map((item) => ({
@@ -55,7 +58,13 @@ export function MonthlySpendingTrendCard({
       : 0;
 
   return (
-    <Card className={cn('flex flex-col', className)} {...props}>
+    <Card className={cn('relative flex flex-col', className)} {...props}>
+      {isFetching && (
+        <div className="bg-background/80 absolute top-2.5 left-2.5 z-20 flex items-center justify-center rounded-full border p-1 shadow-sm backdrop-blur-sm">
+          <Spinner className="text-primary h-3 w-3" />
+        </div>
+      )}
+
       <CardHeader>
         <CardTitle>Monthly Spending Trend</CardTitle>
 
