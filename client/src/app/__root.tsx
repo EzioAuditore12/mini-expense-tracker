@@ -11,7 +11,7 @@ const RootLayout = () => (
     <TooltipProvider>
       <Outlet />
     </TooltipProvider>
-    <Toaster />
+    <Toaster position="top-right" />
     <GlobalAlertDialog />
     <TanStackRouterDevtools />
   </>

@@ -22,10 +22,12 @@ import {
 import type { GetExpenseMonthlyTrendResponse } from '../../schemas/expense/monthly-trend/response.schema';
 import { cn } from '@/lib/utils';
 import { Spinner } from '@/components/ui/spinner';
+import { MonthlySpendingTrendCardSkeleton } from './monthly-spending-trends-skeleton';
 
 interface MonthlySpendingTrendCardProps extends ComponentProps<typeof Card> {
   data?: GetExpenseMonthlyTrendResponse;
   isFetching?: boolean;
+  isLoading?: boolean;
 }
 
 const chartConfig = {
@@ -40,8 +42,13 @@ export function MonthlySpendingTrendCard({
   className,
   data = [],
   isFetching = false,
+  isLoading = false,
   ...props
 }: MonthlySpendingTrendCardProps) {
+  if (isLoading) {
+    return <MonthlySpendingTrendCardSkeleton className={className} {...props} />;
+  }
+
   const chartData = data.map((item) => ({
     ...item,
 

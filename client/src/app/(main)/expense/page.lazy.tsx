@@ -14,15 +14,11 @@ import { AddExpenseFormDialog } from '@/features/main/expense/components/add-for
 import { ExpenseTablePagination } from '@/features/main/expense/components/table/pagination';
 import { EditExpenseDialog } from '@/features/main/expense/components/edit-form-dialog';
 
-import { useCreateExpense } from '@/features/main/expense/hooks/mutations/use-create-expense';
-import { useGetAllExpenses } from '@/features/main/expense/hooks/queries/use-get-all-expenses';
-import { useDeleteExpense } from '@/features/main/expense/hooks/mutations/use-delete-expense';
-import { useEditExpense } from '@/features/main/expense/hooks/mutations/use-edit-expense';
-
 import type { Expense } from '@/features/main/expense/schemas/expense.schema';
-import { useExportExpenses } from '@/features/main/expense/hooks/queries/use-export-expenses';
 
-import { ExpensePageSkeleton } from '@/features/main/expense/components/skeleton';
+import { useExportExpenses } from '@/features/main/expense/hooks/queries/use-export-expenses';
+import { useExpenseMutations } from '@/features/main/expense/hooks/mutations';
+import { useGetAllExpenses } from '@/features/main/expense/hooks/queries/use-get-all-expenses';
 
 export const Route = createLazyFileRoute('/(main)/expense/')({
   component: RouteComponent,
@@ -39,18 +35,17 @@ function RouteComponent() {
     ...filters,
   });
 
-  const { mutate, isPending } = useCreateExpense();
-  const { mutate: deleteExpense } = useDeleteExpense();
-  const { mutate: editExpense, isPending: isEditPending } = useEditExpense();
+  const { createExpense, editExpense, deleteExpense } = useExpenseMutations();
   const { exportExpenses, isExporting } = useExportExpenses();
-
-  if (isLoading) return <ExpensePageSkeleton />;
 
   return (
     <div className="flex flex-col gap-6 p-6">
       <ExpensePageHeader
         addExpenseDialogButton={
-          <AddExpenseFormDialog handleSubmit={mutate} isPending={isPending} />
+          <AddExpenseFormDialog
+            handleSubmit={createExpense.mutate}
+            isPending={createExpense.isPending}
+          />
         }
       />
       <ExpenseFilters
@@ -59,7 +54,9 @@ function RouteComponent() {
         onExportCsv={exportExpenses}
         isExporting={isExporting}
       />
+
       <ExpenseDataTable
+        isLoading={isLoading}
         columns={expenseColumns({
           onEdit: (id) => {
             const expense = data?.data.find((e) => e.id === id);
@@ -67,12 +64,13 @@ function RouteComponent() {
           },
 
           onDelete: (id) => {
-            deleteExpense(id);
+            deleteExpense.mutate(id);
           },
         })}
         data={data?.data ?? []}
       />
       <ExpenseTablePagination
+        isLoading={isLoading}
         page={page}
         totalPages={data?.totalPages ?? 1}
         onPageChange={setPage}
@@ -81,8 +79,8 @@ function RouteComponent() {
       <EditExpenseDialog
         expense={editingExpense}
         onClose={() => setEditingExpense(null)}
-        isPending={isEditPending}
-        onSubmit={editExpense}
+        isPending={editExpense.isPending}
+        onSubmit={editExpense.mutate}
       />
     </div>
   );

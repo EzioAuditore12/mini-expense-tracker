@@ -7,19 +7,26 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 
+import { ExpenseTablePaginationSkeleton } from '@/features/main/expense/components/skeleton';
+
 interface ExpenseTablePaginationProps {
   page: number;
 
   totalPages: number;
 
   onPageChange: (page: number) => void;
+  isLoading?: boolean;
 }
 
 export function ExpenseTablePagination({
   page,
   totalPages,
   onPageChange,
+  isLoading,
 }: ExpenseTablePaginationProps) {
+  if (isLoading) {
+    return <ExpenseTablePaginationSkeleton />;
+  }
   return (
     <Pagination>
       <PaginationContent>

@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 
 export function DashboardStatsCardSkeleton() {
   return (
@@ -18,9 +19,12 @@ export function DashboardStatsCardSkeleton() {
   );
 }
 
-export function DashboardStatsSectionSkeleton() {
+export function DashboardStatsSectionSkeleton({
+  className,
+  ...props
+}: React.ComponentProps<'section'>) {
   return (
-    <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <section className={cn('grid gap-4 sm:grid-cols-2 xl:grid-cols-4', className)} {...props}>
       <DashboardStatsCardSkeleton />
       <DashboardStatsCardSkeleton />
       <DashboardStatsCardSkeleton />

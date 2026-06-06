@@ -23,10 +23,12 @@ import {
 import type { GetExpenseCategorySummaryResponse } from '../../schemas/expense/category-summary/response.schema';
 import { cn } from '@/lib/utils';
 import { Spinner } from '@/components/ui/spinner';
+import { ExpensesChartCardSkeleton } from './expense-skeleton';
 
 interface ExpensesChartCardProps extends ComponentProps<typeof Card> {
   data?: GetExpenseCategorySummaryResponse;
   isFetching?: boolean;
+  isLoading?: boolean;
 }
 
 const chartConfig = {
@@ -84,8 +86,13 @@ export function ExpensesChartCard({
   className,
   data = [],
   isFetching = false,
+  isLoading = false,
   ...props
 }: ExpensesChartCardProps) {
+  if (isLoading) {
+    return <ExpensesChartCardSkeleton className={className} {...props} />;
+  }
+
   const chartData = data.map((item) => ({
     ...item,
 

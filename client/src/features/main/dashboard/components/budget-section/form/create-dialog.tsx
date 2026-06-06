@@ -26,8 +26,7 @@ import {
   type CreateBudgetParam,
 } from '../../../schemas/budget/create/param.schema';
 import { getMonth, getYear } from 'date-fns';
-import { monthItems } from './month-items';
-import { yearItems } from './year-items';
+import { monthItems, yearItems } from '../../month-year-select';
 
 const categoryItems = categoryEnum.map((category) => ({
   label: category.charAt(0) + category.slice(1).toLowerCase(),

@@ -1,9 +1,14 @@
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
+import type { ComponentProps } from 'react';
 
-export function MonthlySpendingTrendCardSkeleton() {
+export function MonthlySpendingTrendCardSkeleton({
+  className,
+  ...props
+}: ComponentProps<typeof Card>) {
   return (
-    <Card className="flex h-full flex-col">
+    <Card className={cn('flex h-full flex-col', className)} {...props}>
       <CardHeader className="space-y-2">
         <Skeleton className="h-5 w-44" />
         <Skeleton className="h-4 w-32" />

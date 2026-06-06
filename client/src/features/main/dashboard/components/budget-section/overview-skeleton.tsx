@@ -1,9 +1,11 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export function BudgetOverviewCardSkeleton() {
+import type { ComponentProps } from 'react';
+
+export function BudgetOverviewCardSkeleton({ className, ...props }: ComponentProps<typeof Card>) {
   return (
-    <Card>
+    <Card className={className} {...props}>
       <CardHeader>
         <Skeleton className="mb-2 h-6 w-36" />
         <Skeleton className="h-4 w-64" />

@@ -14,15 +14,19 @@ import {
 
 import { cn } from '@/lib/utils';
 
+import { ExpenseTableSkeleton } from '@/features/main/expense/components/skeleton';
+
 interface ExpenseDataTableProps<TData, TValue> extends ComponentProps<'div'> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  isLoading?: boolean;
 }
 
 export function ExpenseDataTable<TData, TValue>({
   className,
   columns,
   data,
+  isLoading,
   ...props
 }: ExpenseDataTableProps<TData, TValue>) {
   const table = useReactTable({
@@ -32,6 +36,10 @@ export function ExpenseDataTable<TData, TValue>({
 
     getCoreRowModel: getCoreRowModel(),
   });
+
+  if (isLoading) {
+    return <ExpenseTableSkeleton />;
+  }
 
   return (
     <div className={cn('overflow-hidden rounded-xl border', className)} {...props}>

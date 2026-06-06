@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#7C3AED" />
+    </linearGradient>
+    <!-- Accent Gradient -->
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <!-- Card/Wallet Glassmorphism Gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.05" />
+    </linearGradient>
+    <!-- Glow Filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Base Circle with Gradient -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)" />
+
+  <!-- Decorative blur circles in the background -->
+  <circle cx="120" cy="120" r="80" fill="#06B6D4" opacity="0.4" filter="url(#glow)" />
+  <circle cx="380" cy="380" r="90" fill="#EC4899" opacity="0.3" filter="url(#glow)" />
+
+  <!-- Wallet / Card Body -->
+  <rect x="112" y="160" width="288" height="192" rx="24" fill="url(#cardGrad)" stroke="#FFFFFF" stroke-width="2" stroke-opacity="0.3" />
+
+  <!-- Card Chip / Detail -->
+  <rect x="144" y="200" width="48" height="36" rx="8" fill="#FBBF24" opacity="0.8" />
+  
+  <!-- Chart Trend Line showing expenses/savings -->
+  <path d="M 120 320 L 190 270 L 260 290 L 330 220 L 390 250" fill="none" stroke="url(#accentGrad)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+  
+  <!-- Interactive Dots on Trend Line -->
+  <circle cx="330" cy="220" r="8" fill="#10B981" />
+  <circle cx="390" cy="250" r="8" fill="#10B981" />
+
+  <!-- Currency / Dollar Symbol overlay -->
+  <text x="340" y="325" font-family="system-ui, sans-serif" font-size="54" font-weight="bold" fill="#FFFFFF" text-anchor="middle" opacity="0.95">$</text>
+</svg>

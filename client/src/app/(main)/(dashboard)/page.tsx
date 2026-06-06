@@ -1,27 +1,21 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
+import { getMonth, getYear } from 'date-fns';
+
+import { MonthYearSelect } from '@/features/main/dashboard/components/month-year-select';
 
 import { ExpensesChartCard } from '@/features/main/dashboard/components/chart-cards/expense';
-import { ExpensesChartCardSkeleton } from '@/features/main/dashboard/components/chart-cards/expense-skeleton';
 import { DashboardHeader } from '@/features/main/dashboard/components/header';
 
-import { useGetExpenseCategorySummary } from '@/features/main/dashboard/hooks/queries/use-get-expense-category-summary';
-import { useGetExpenseMonthlyTrend } from '@/features/main/dashboard/hooks/queries/use-get-expense-monthly-trend';
-import { useGetExpenseSummary } from '@/features/main/dashboard/hooks/queries/use-get-expense-summary';
-import {
-  DashboardStatsSection,
-  DashboardStatsSectionSkeleton,
-} from '@/features/main/dashboard/components/stats';
+import { DashboardStatsSection } from '@/features/main/dashboard/components/stats';
 import { MonthlySpendingTrendCard } from '@/features/main/dashboard/components/chart-cards/monthly-spending-trends';
-import { MonthlySpendingTrendCardSkeleton } from '@/features/main/dashboard/components/chart-cards/monthly-spending-trends-skeleton';
-import { useGetBudgetSummary } from '@/features/main/dashboard/hooks/queries/use-get-budget-summary';
 import { BudgetOverviewCard } from '@/features/main/dashboard/components/budget-section/overview-card';
-import { BudgetOverviewCardSkeleton } from '@/features/main/dashboard/components/budget-section/overview-skeleton';
 import { AddBudgetFormDialog } from '@/features/main/dashboard/components/budget-section/form/create-dialog';
 import { EditBudgetDialog } from '@/features/main/dashboard/components/budget-section/form/edit-dialog';
-import { useCreateNewBudget } from '@/features/main/dashboard/hooks/mutations/use-create-new-budget';
-import { useEditBudget } from '@/features/main/dashboard/hooks/mutations/use-edit-budget';
-import { useDeleteBudget } from '@/features/main/dashboard/hooks/mutations/use-delete-budget';
+
+import { useBudgetMutations } from '@/features/main/dashboard/hooks/mutations';
+import { useDashboardQueries } from '@/features/main/dashboard/hooks/queries';
+
 import type { BudgetSummary } from '@/features/main/dashboard/schemas/budget/summary/response.schema';
 
 export const Route = createFileRoute('/(main)/(dashboard)/')({
@@ -29,103 +23,110 @@ export const Route = createFileRoute('/(main)/(dashboard)/')({
 });
 
 function RouteComponent() {
+  const [month, setMonth] = useState<number>(() => getMonth(new Date()) + 1);
+  const [year, setYear] = useState<number>(() => getYear(new Date()));
+
+  const dashboardQueries = useDashboardQueries({ month, year });
+
   return (
     <div className="flex flex-col gap-6 p-6">
-      <DashboardHeader />
+      <DashboardHeader>
+        <MonthYearSelect
+          month={month}
+          year={year}
+          onMonthChange={setMonth}
+          onYearChange={setYear}
+        />
+      </DashboardHeader>
 
-      <ExpenseAnalyticsSection />
+      <ExpenseAnalyticsSection queries={dashboardQueries} />
 
-      <BudgetAnalyticsSection />
+      <BudgetAnalyticsSection queries={dashboardQueries} />
     </div>
   );
 }
 
-function ExpenseAnalyticsSection() {
+function ExpenseAnalyticsSection({
+  queries,
+}: {
+  queries: ReturnType<typeof useDashboardQueries>;
+}) {
   const {
-    data,
-    isLoading: isCategoryLoading,
-    isFetching: isCategoryFetching,
-  } = useGetExpenseCategorySummary();
-
-  const {
-    data: monthlyTrends,
-    isLoading: isTrendsLoading,
-    isFetching: isTrendsFetching,
-  } = useGetExpenseMonthlyTrend();
-
-  const {
-    data: expenseSummary,
-    isLoading: isSummaryLoading,
-    isFetching: isSummaryFetching,
-  } = useGetExpenseSummary();
+    categorySummary,
+    isCategoryLoading,
+    isCategoryFetching,
+    monthlyTrends,
+    isTrendsLoading,
+    isTrendsFetching,
+    expenseSummary,
+    isSummaryLoading,
+    isSummaryFetching,
+  } = queries;
 
   return (
     <>
-      {isSummaryLoading ? (
-        <DashboardStatsSectionSkeleton />
-      ) : (
-        <DashboardStatsSection
-          data={expenseSummary!}
-          isFetching={isSummaryFetching}
-          className="sm:grid-cols-2 xl:grid-cols-4"
-        />
-      )}
+      <DashboardStatsSection
+        data={expenseSummary}
+        isLoading={isSummaryLoading}
+        isFetching={isSummaryFetching}
+        className="sm:grid-cols-2 xl:grid-cols-4"
+      />
 
       <section className="grid gap-4 lg:grid-cols-2">
-        {isCategoryLoading ? (
-          <ExpensesChartCardSkeleton />
-        ) : (
-          <ExpensesChartCard data={data} isFetching={isCategoryFetching} />
-        )}
+        <ExpensesChartCard
+          data={categorySummary}
+          isLoading={isCategoryLoading}
+          isFetching={isCategoryFetching}
+        />
 
-        {isTrendsLoading ? (
-          <MonthlySpendingTrendCardSkeleton />
-        ) : (
-          <MonthlySpendingTrendCard data={monthlyTrends} isFetching={isTrendsFetching} />
-        )}
+        <MonthlySpendingTrendCard
+          data={monthlyTrends}
+          isLoading={isTrendsLoading}
+          isFetching={isTrendsFetching}
+        />
       </section>
     </>
   );
 }
 
-function BudgetAnalyticsSection() {
+function BudgetAnalyticsSection({
+  queries,
+}: {
+  queries: ReturnType<typeof useDashboardQueries>;
+}) {
   const [editingBudget, setEditingBudget] = useState<BudgetSummary | null>(null);
 
   const {
-    data: budgetSummary,
-    isLoading: isBudgetLoading,
-    isFetching: isBudgetFetching,
-  } = useGetBudgetSummary({
-    month: 6,
-    year: 2026,
-  });
+    budgetSummary,
+    isBudgetLoading,
+    isBudgetFetching,
+  } = queries;
 
-  const { mutate: createBudget, isPending: isCreatePending } = useCreateNewBudget();
-
-  const { mutate: editBudget, isPending: isEditPending } = useEditBudget();
-
-  const { mutate: deleteBudget } = useDeleteBudget();
+  const {
+    createBudget,
+    isCreatePending,
+    editBudget,
+    isEditPending,
+    deleteBudget,
+  } = useBudgetMutations();
 
   return (
     <>
-      {isBudgetLoading ? (
-        <BudgetOverviewCardSkeleton />
-      ) : (
-        <BudgetOverviewCard
-          data={budgetSummary}
-          isFetching={isBudgetFetching}
-          onEdit={(id) => {
-            const budget = budgetSummary?.find((b) => b.id === id);
+      <BudgetOverviewCard
+        data={budgetSummary}
+        isLoading={isBudgetLoading}
+        isFetching={isBudgetFetching}
+        onEdit={(id) => {
+          const budget = budgetSummary?.find((b) => b.id === id);
 
-            if (budget) setEditingBudget(budget);
-          }}
-          onDelete={(id) => {
-            if (confirm('Are you sure you want to delete this budget?')) {
-              deleteBudget(id);
-            }
-          }}
-        />
-      )}
+          if (budget) setEditingBudget(budget);
+        }}
+        onDelete={(id) => {
+          if (confirm('Are you sure you want to delete this budget?')) {
+            deleteBudget(id);
+          }
+        }}
+      />
 
       <AddBudgetFormDialog handleSubmit={createBudget} isPending={isCreatePending} />
 
@@ -138,3 +139,4 @@ function BudgetAnalyticsSection() {
     </>
   );
 }
+

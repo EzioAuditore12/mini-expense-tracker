@@ -2,22 +2,29 @@ import { ReceiptTextIcon, TrendingUpIcon, WalletIcon, Layers3Icon } from 'lucide
 import type { ComponentProps } from 'react';
 
 import { DashboardStatsCard } from './card';
+import { DashboardStatsSectionSkeleton } from './skeleton';
 
 import type { GetExpenseSummaryResponse } from '../../schemas/expense/summary/response.schema';
 
 import { cn } from '@/lib/utils';
 
 interface DashboardStatsSectionProps extends ComponentProps<'section'> {
-  data: GetExpenseSummaryResponse;
+  data?: GetExpenseSummaryResponse;
   isFetching?: boolean;
+  isLoading?: boolean;
 }
 
 export function DashboardStatsSection({
   className,
   data,
   isFetching = false,
+  isLoading = false,
   ...props
 }: DashboardStatsSectionProps) {
+  if (isLoading) {
+    return <DashboardStatsSectionSkeleton className={className} {...props} />;
+  }
+
   return (
     <section className={cn('grid gap-4', className)} {...props}>
       <DashboardStatsCard

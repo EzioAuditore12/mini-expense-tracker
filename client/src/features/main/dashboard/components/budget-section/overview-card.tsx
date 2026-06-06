@@ -9,11 +9,14 @@ import { cn } from '@/lib/utils';
 import type { BudgetSummaryResponse } from '../../schemas/budget/summary/response.schema';
 import { Spinner } from '@/components/ui/spinner';
 
+import { BudgetOverviewCardSkeleton } from './overview-skeleton';
+
 interface BudgetOverviewCardProps extends ComponentProps<typeof Card> {
   data?: BudgetSummaryResponse;
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
   isFetching?: boolean;
+  isLoading?: boolean;
 }
 
 export function BudgetOverviewCard({
@@ -22,8 +25,13 @@ export function BudgetOverviewCard({
   onEdit,
   onDelete,
   isFetching = false,
+  isLoading = false,
   ...props
 }: BudgetOverviewCardProps) {
+  if (isLoading) {
+    return <BudgetOverviewCardSkeleton className={className} {...props} />;
+  }
+
   return (
     <Card className={cn('relative', className)} {...props}>
       {isFetching && (

@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 import { USE_GET_ALL_EXPENSES_QUERY_KEY } from '../queries/use-get-all-expenses';
 import { updateExpenseApi } from '../../api/update-expense.api';
@@ -11,12 +12,14 @@ export function useEditExpense() {
       updateExpenseApi(id, data),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: [USE_GET_ALL_EXPENSES_QUERY_KEY] });
-
-      console.log(data);
-      alert('Expense updated successfully');
+      toast.success('Expense Updated', {
+        description: `Updated ${data.category.toLowerCase()} to $${data.amount.toFixed(2)}.`,
+      });
     },
     onError: (error) => {
-      alert(error.message);
+      toast.error('Failed to Update Expense', {
+        description: error.message,
+      });
     },
   });
 }

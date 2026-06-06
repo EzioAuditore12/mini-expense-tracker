@@ -4,7 +4,6 @@ import { AlertCircle, RotateCcw } from 'lucide-react';
 import { useGetProfile } from '@/features/common/hooks/queries/use-get-profile';
 import { ProfileHeader } from '@/features/main/profile/components/profile-header';
 import { ProfileDetailsCard } from '@/features/main/profile/components/profile-details-card';
-import { ProfileStatsCard } from '@/features/main/profile/components/profile-stats-card';
 import { ProfileSkeleton } from '@/features/main/profile/components/profile-skeleton';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -52,7 +51,6 @@ function RouteComponent() {
       {/* Grid containing details and stats summaries */}
       <div className="grid gap-6 md:grid-cols-1">
         {/* Spending statistics breakdown */}
-        <ProfileStatsCard />
 
         {/* Basic profile information fields */}
         <ProfileDetailsCard user={user} />

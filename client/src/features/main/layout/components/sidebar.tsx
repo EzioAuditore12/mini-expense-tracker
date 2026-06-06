@@ -1,7 +1,7 @@
 import { type LucideIcon } from 'lucide-react';
 import { WalletIcon } from 'lucide-react';
-import { type LinkProps } from '@tanstack/react-router';
-import type { ComponentProps } from 'react';
+import { type LinkProps, useLocation } from '@tanstack/react-router';
+import { useEffect, type ComponentProps } from 'react';
 
 import {
   Sidebar,
@@ -11,6 +11,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from '@/components/ui/sidebar';
 
 import { cn } from '@/lib/utils';
@@ -39,6 +40,15 @@ export function AppSidebar({
   handleUserLogout,
   ...props
 }: AppSidebarProps) {
+  const { setOpenMobile, isMobile } = useSidebar();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  }, [location.pathname, isMobile, setOpenMobile]);
+
   return (
     <Sidebar className={cn(className)} collapsible="offcanvas" {...props}>
       <SidebarHeader className="border-b">
