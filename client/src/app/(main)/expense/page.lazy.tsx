@@ -35,17 +35,15 @@ function RouteComponent() {
     ...filters,
   });
 
-  const { createExpense, editExpense, deleteExpense } = useExpenseMutations();
+  const { createExpense, editExpense, deleteExpense, isCreatePending, isEditPending } =
+    useExpenseMutations();
   const { exportExpenses, isExporting } = useExportExpenses();
 
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className="flex min-h-0 flex-1 flex-col gap-6 p-6">
       <ExpensePageHeader
         addExpenseDialogButton={
-          <AddExpenseFormDialog
-            handleSubmit={createExpense.mutate}
-            isPending={createExpense.isPending}
-          />
+          <AddExpenseFormDialog handleSubmit={createExpense.mutate} isPending={isCreatePending} />
         }
       />
       <ExpenseFilters
@@ -56,6 +54,7 @@ function RouteComponent() {
       />
 
       <ExpenseDataTable
+        className="min-h-0 flex-1 overflow-y-auto"
         isLoading={isLoading}
         columns={expenseColumns({
           onEdit: (id) => {
@@ -79,7 +78,7 @@ function RouteComponent() {
       <EditExpenseDialog
         expense={editingExpense}
         onClose={() => setEditingExpense(null)}
-        isPending={editExpense.isPending}
+        isPending={isEditPending}
         onSubmit={editExpense.mutate}
       />
     </div>

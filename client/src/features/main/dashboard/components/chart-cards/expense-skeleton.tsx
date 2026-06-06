@@ -3,10 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import type { ComponentProps } from 'react';
 
-export function ExpensesChartCardSkeleton({
-  className,
-  ...props
-}: ComponentProps<typeof Card>) {
+export function ExpensesChartCardSkeleton({ className, ...props }: ComponentProps<typeof Card>) {
   return (
     <Card className={cn('flex h-full flex-col', className)} {...props}>
       <CardHeader className="items-center space-y-2 pb-0">

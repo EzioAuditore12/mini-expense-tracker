@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { ExpenseCategoryBadge } from './category-badge';
 
 import type { Expense } from '../../schemas/expense.schema';
+import { formatCurrency } from '@/lib/currency';
 
 interface ExpenseColumnsProps {
   onEdit: (id: string) => void;
@@ -26,7 +27,7 @@ export const expenseColumns = ({ onEdit, onDelete }: ExpenseColumnsProps): Colum
 
     header: 'Amount',
 
-    cell: ({ row }) => <div className="font-medium">₹{row.original.amount.toLocaleString()}</div>,
+    cell: ({ row }) => <div className="font-medium">{formatCurrency(row.original.amount)}</div>,
   },
 
   {

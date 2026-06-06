@@ -1,6 +1,7 @@
 import {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -18,6 +19,22 @@ interface ExpenseTablePaginationProps {
   isLoading?: boolean;
 }
 
+function generatePaginationItems(currentPage: number, totalPages: number) {
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }).map((_, i) => i + 1);
+  }
+
+  if (currentPage <= 4) {
+    return [1, 2, 3, 4, 5, '...', totalPages];
+  }
+
+  if (currentPage >= totalPages - 3) {
+    return [1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+  }
+
+  return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages];
+}
+
 export function ExpenseTablePagination({
   page,
   totalPages,
@@ -27,6 +44,9 @@ export function ExpenseTablePagination({
   if (isLoading) {
     return <ExpenseTablePaginationSkeleton />;
   }
+
+  const items = generatePaginationItems(page, totalPages);
+
   return (
     <Pagination>
       <PaginationContent>
@@ -44,10 +64,16 @@ export function ExpenseTablePagination({
           />
         </PaginationItem>
 
-        {Array.from({
-          length: totalPages,
-        }).map((_, index) => {
-          const pageNumber = index + 1;
+        {items.map((item, index) => {
+          if (item === '...') {
+            return (
+              <PaginationItem key={`ellipsis-${index}`}>
+                <PaginationEllipsis />
+              </PaginationItem>
+            );
+          }
+
+          const pageNumber = item as number;
 
           return (
             <PaginationItem key={pageNumber}>

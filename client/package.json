@@ -23,6 +23,7 @@
     "@unpic/react": "^1.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "country-to-currency": "^3.0.1",
     "date-fns": "^4.4.0",
     "lucide-react": "^1.17.0",
     "motion": "^12.40.0",

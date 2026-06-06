@@ -1,5 +1,5 @@
 import { type LucideIcon } from 'lucide-react';
-import { WalletIcon } from 'lucide-react';
+import { Logo } from '@/features/main/layout/components/logo';
 import { type LinkProps, useLocation } from '@tanstack/react-router';
 import { useEffect, type ComponentProps } from 'react';
 
@@ -25,6 +25,10 @@ export type NavMain = {
   target: LinkProps['to'];
   icon: LucideIcon;
   color: string;
+  items?: {
+    title: string;
+    targetId: string;
+  }[];
 };
 
 export interface AppSidebarProps extends ComponentProps<typeof Sidebar> {
@@ -54,18 +58,11 @@ export function AppSidebar({
       <SidebarHeader className="border-b">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" className="data-[slot=sidebar-menu-button]:p-2">
-              <div className="bg-primary text-primary-foreground flex aspect-square size-9 items-center justify-center rounded-lg">
-                <WalletIcon className="size-5" />
-              </div>
-
-              <div className="grid flex-1 text-left leading-tight">
-                <span className="truncate text-sm font-semibold">ExpenseWise</span>
-
-                <span className="text-muted-foreground truncate text-xs">
-                  Personal finance dashboard
-                </span>
-              </div>
+            <SidebarMenuButton
+              size="lg"
+              className="hover:bg-transparent data-[slot=sidebar-menu-button]:p-2"
+              asChild>
+              <Logo />
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

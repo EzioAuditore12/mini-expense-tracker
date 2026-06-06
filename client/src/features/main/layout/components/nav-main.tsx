@@ -5,6 +5,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 import type { ComponentProps } from 'react';
 import { useRouter } from '@tanstack/react-router';
@@ -17,6 +20,17 @@ interface NavMainProps extends ComponentProps<typeof SidebarGroup> {
 
 export function NavMain({ items }: NavMainProps) {
   const router = useRouter();
+
+  const handleSubItemClick = async (targetId: string, parentTarget: string) => {
+    if (router.state.location.pathname !== parentTarget) {
+      await router.navigate({ to: parentTarget });
+      setTimeout(() => {
+        document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <SidebarGroup>
@@ -42,6 +56,25 @@ export function NavMain({ items }: NavMainProps) {
                   </SidebarMenuButton>
                 </motion.div>
               </SidebarMenuButton>
+
+              {item.items && item.items.length > 0 && (
+                <SidebarMenuSub>
+                  {item.items.map((subItem) => (
+                    <SidebarMenuSubItem key={subItem.title}>
+                      <SidebarMenuSubButton
+                        asChild
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSubItemClick(subItem.targetId, item.target!);
+                        }}>
+                        <a href={`#${subItem.targetId}`} className="cursor-pointer">
+                          <span>{subItem.title}</span>
+                        </a>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  ))}
+                </SidebarMenuSub>
+              )}
             </SidebarMenuItem>
           ))}
         </SidebarMenu>

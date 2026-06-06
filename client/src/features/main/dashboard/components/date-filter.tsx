@@ -1,5 +1,3 @@
-import { getMonth, getYear } from 'date-fns';
-
 import {
   Select,
   SelectContent,
@@ -7,38 +5,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { monthItems } from './month-items';
-import { yearItems } from './year-items';
+import { monthItems } from './budget-section/form/month-items';
+import { yearItems } from './budget-section/form/year-items';
 
-interface MonthYearSelectProps {
+interface DashboardDateFilterProps {
   month: number;
   year: number;
   onMonthChange: (month: number) => void;
   onYearChange: (year: number) => void;
 }
 
-export function MonthYearSelect({
+export function DashboardDateFilter({
   month,
   year,
   onMonthChange,
   onYearChange,
-}: MonthYearSelectProps) {
-  const currentMonth = getMonth(new Date()) + 1;
-  const currentYear = getYear(new Date());
-
-  const availableMonths =
-    year === currentYear
-      ? monthItems.filter((item) => Number(item.value) <= currentMonth)
-      : monthItems;
-
+}: DashboardDateFilterProps) {
   return (
-    <>
+    <div className="flex items-center gap-2">
       <Select value={String(month)} onValueChange={(val) => onMonthChange(Number(val))}>
         <SelectTrigger className="w-[140px]">
           <SelectValue placeholder="Select Month" />
         </SelectTrigger>
         <SelectContent>
-          {availableMonths.map((item) => (
+          {monthItems.map((item) => (
             <SelectItem key={item.value} value={item.value}>
               {item.label}
             </SelectItem>
@@ -46,7 +36,7 @@ export function MonthYearSelect({
         </SelectContent>
       </Select>
 
-      <Select value={String(year)} onValueChange={(val) => onYearChange(Number(val))} disabled>
+      <Select value={String(year)} onValueChange={(val) => onYearChange(Number(val))}>
         <SelectTrigger className="w-[100px]">
           <SelectValue placeholder="Select Year" />
         </SelectTrigger>
@@ -58,6 +48,6 @@ export function MonthYearSelect({
           ))}
         </SelectContent>
       </Select>
-    </>
+    </div>
   );
 }

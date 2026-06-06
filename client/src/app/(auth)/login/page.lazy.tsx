@@ -5,6 +5,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Stack } from '@/components/ui/stack';
 import { H2 } from '@/components/ui/typography';
 
+import { Logo } from '@/features/main/layout/components/logo';
+
 import { useLoginForm } from '@/features/auth/login/hooks/use-login-form';
 
 import { LoginBanner } from '@/features/auth/login/components/banner';
@@ -22,6 +24,9 @@ function RouteComponent() {
       <Card className="w-full max-w-4xl overflow-hidden rounded-2xl border p-0 shadow-xl">
         <CardContent className="grid p-0 md:grid-cols-2">
           <Stack className="p-6 md:p-8" spacing={'md'}>
+            <div className="flex w-full items-center justify-center md:justify-start">
+              <Logo hideSubtitle iconContainerClassName="size-8" iconClassName="size-5" />
+            </div>
             <H2>Welcome Back ! </H2>
 
             <LoginForm handleSubmit={mutate} isRequestPending={isPending} />

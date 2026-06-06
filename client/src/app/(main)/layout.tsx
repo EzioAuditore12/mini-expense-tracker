@@ -24,6 +24,16 @@ const navMain: NavMain[] = [
     target: '/',
     icon: LayoutDashboard,
     color: 'text-violet-500',
+    items: [
+      {
+        title: 'Expense Analytics',
+        targetId: 'expense-analytics',
+      },
+      {
+        title: 'Budget Analytics',
+        targetId: 'budget-analytics',
+      },
+    ],
   },
   {
     title: 'Expenses',
@@ -52,9 +62,9 @@ function RouteComponent() {
         } as CSSProperties
       }>
       <AppSidebar variant="inset" navMain={navMain} user={user!} handleUserLogout={handleLogout} />
-      <div className="border-border/60 flex min-h-0 flex-1 flex-col border-l">
+      <div className="border-border/60 flex min-h-0 min-w-0 flex-1 flex-col border-l">
         <SiteHeader />
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex min-h-0 flex-1 flex-col">
           <Outlet />
         </main>
       </div>

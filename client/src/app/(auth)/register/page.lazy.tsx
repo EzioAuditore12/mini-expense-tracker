@@ -5,6 +5,8 @@ import { RegisterForm } from '@/features/auth/register/components/form';
 import { useRegisterForm } from '@/features/auth/register/hooks/use-register-form';
 import { createLazyFileRoute, Link } from '@tanstack/react-router';
 
+import { Logo } from '@/features/main/layout/components/logo';
+
 export const Route = createLazyFileRoute('/(auth)/register/')({
   component: RouteComponent,
 });
@@ -17,7 +19,10 @@ function RouteComponent() {
       <Card className="w-full max-w-4xl overflow-hidden rounded-2xl border p-0 shadow-xl">
         <CardContent className="grid p-0">
           <Stack className="p-6 md:p-8" spacing={'md'}>
-            <H2>Register Yourself</H2>
+            <div className="flex w-full items-center justify-center">
+              <Logo hideSubtitle iconContainerClassName="size-8" iconClassName="size-5" />
+            </div>
+            <H2 className="text-center">Register Yourself</H2>
 
             <RegisterForm handleSubmit={mutate} isRequestPending={isPending} />
 

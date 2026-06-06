@@ -7,6 +7,7 @@ import { DashboardStatsSectionSkeleton } from './skeleton';
 import type { GetExpenseSummaryResponse } from '../../schemas/expense/summary/response.schema';
 
 import { cn } from '@/lib/utils';
+import { formatCurrency } from '@/lib/currency';
 
 interface DashboardStatsSectionProps extends ComponentProps<'section'> {
   data?: GetExpenseSummaryResponse;
@@ -32,7 +33,7 @@ export function DashboardStatsSection({
         data={{
           title: 'Total Expenses',
 
-          value: `₹${data?.totalExpenses ?? 0}`,
+          value: formatCurrency(data?.totalExpenses ?? 0),
 
           description: 'This month spending',
 
@@ -47,7 +48,7 @@ export function DashboardStatsSection({
         data={{
           title: 'Highest Expense',
 
-          value: `₹${data?.highestExpense?.amount ?? 0}`,
+          value: formatCurrency(data?.highestExpense?.amount ?? 0),
 
           description: data?.highestExpense?.category ?? 'No category',
 

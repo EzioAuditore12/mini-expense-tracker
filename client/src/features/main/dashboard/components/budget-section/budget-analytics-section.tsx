@@ -16,26 +16,13 @@ interface BudgetAnalyticsSectionProps {
   queries: ReturnType<typeof useDashboardQueries>;
 }
 
-export function BudgetAnalyticsSection({
-  month,
-  year,
-  queries,
-}: BudgetAnalyticsSectionProps) {
+export function BudgetAnalyticsSection({ month, year, queries }: BudgetAnalyticsSectionProps) {
   const [editingBudget, setEditingBudget] = useState<BudgetSummary | null>(null);
 
-  const {
-    budgetSummary = [],
-    isBudgetLoading,
-    isBudgetFetching,
-  } = queries;
+  const { budgetSummary = [], isBudgetLoading, isBudgetFetching } = queries;
 
-  const {
-    createBudget,
-    isCreatePending,
-    editBudget,
-    isEditPending,
-    deleteBudget,
-  } = useBudgetMutations();
+  const { createBudget, isCreatePending, editBudget, isEditPending, deleteBudget } =
+    useBudgetMutations();
 
   const existingCategories = budgetSummary?.map((b) => b.category) ?? [];
   const hasBudgets = existingCategories.length > 0;
@@ -76,7 +63,9 @@ export function BudgetAnalyticsSection({
                 <div className="flex items-center gap-3 rounded-lg border border-amber-500/20 bg-amber-500/5 p-4 text-amber-800 dark:text-amber-200">
                   <Info className="h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
                   <div className="text-sm">
-                    <span className="font-semibold">All category budgets set.</span> You have configured a budget for all available categories for this month. You cannot add any more budgets.
+                    <span className="font-semibold">All category budgets set.</span> You have
+                    configured a budget for all available categories for this month. You cannot add
+                    any more budgets.
                   </div>
                 </div>
               ) : (

@@ -24,6 +24,7 @@ import type { GetExpenseCategorySummaryResponse } from '../../schemas/expense/ca
 import { cn } from '@/lib/utils';
 import { Spinner } from '@/components/ui/spinner';
 import { ExpensesChartCardSkeleton } from './expense-skeleton';
+import { formatCurrency } from '@/lib/currency';
 
 interface ExpensesChartCardProps extends ComponentProps<typeof Card> {
   data?: GetExpenseCategorySummaryResponse;
@@ -135,7 +136,7 @@ export function ExpensesChartCard({
 
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 leading-none font-medium">
-          Total spent ₹{totalExpenses.toLocaleString()}
+          Total spent {formatCurrency(totalExpenses)}
           <TrendingUpIcon className="h-4 w-4" />
         </div>
 

@@ -8,6 +8,7 @@ import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import type { BudgetSummaryResponse } from '../../schemas/budget/summary/response.schema';
 import { Spinner } from '@/components/ui/spinner';
+import { formatCurrency } from '@/lib/currency';
 
 import { BudgetOverviewCardSkeleton } from './overview-skeleton';
 
@@ -54,7 +55,7 @@ export function BudgetOverviewCard({
                 <p className="font-medium">{budget.category}</p>
 
                 <p className="text-muted-foreground text-sm">
-                  ₹{budget.spent.toLocaleString()} / ₹{budget.limitAmount.toLocaleString()}
+                  {formatCurrency(budget.spent)} / {formatCurrency(budget.limitAmount)}
                 </p>
               </div>
 
@@ -97,8 +98,8 @@ export function BudgetOverviewCard({
 
               <span>
                 {budget.remaining < 0
-                  ? `₹${Math.abs(budget.remaining).toLocaleString()} over budget`
-                  : `₹${budget.remaining.toLocaleString()} remaining`}
+                  ? `${formatCurrency(Math.abs(budget.remaining))} over budget`
+                  : `${formatCurrency(budget.remaining)} remaining`}
               </span>
             </div>
           </div>
