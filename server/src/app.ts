@@ -11,6 +11,8 @@ import helmet from '@/middlewares/helmet';
 import { env } from '@/env';
 import { ROUTE_PATHS } from '@/lib/constants/routes';
 
+import { getHome } from '@/controllers/home.controller';
+
 import { healthCheckRouter } from '@/routers/health-check.router';
 import { authRouter } from './routers/auth.router';
 import { userRouter } from './routers/user.router';
@@ -33,6 +35,8 @@ app.use(rateLimiter);
 app.use(requestLogger);
 
 // Routes
+app.get('/', getHome);
+
 app.use(ROUTE_PATHS.HEALTH_CHECK, healthCheckRouter);
 app.use(ROUTE_PATHS.AUTH, authRouter);
 app.use(ROUTE_PATHS.USER, userRouter);

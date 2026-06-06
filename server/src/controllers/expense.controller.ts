@@ -83,29 +83,46 @@ export class ExpenseController {
       .send({ message: `Record ${expenseId} deleted successfully` });
   };
 
-  public getSummaryByUserId = async (req: ExpenseSummaryRequest, res: Response) => {
+  public getSummaryByUserId = async (
+    req: ExpenseSummaryRequest,
+    res: Response,
+  ) => {
     const userId = req.user?.id!;
     const { month, year } = req.query;
 
-    const result = await this.expenseService.getSummaryByUserId(userId, { month, year });
+    const result = await this.expenseService.getSummaryByUserId(userId, {
+      month,
+      year,
+    });
 
     return res.status(StatusCodes.OK).send(result);
   };
 
-  public getCategorySummaryByUserId = async (req: ExpenseCategorySummaryRequest, res: Response) => {
+  public getCategorySummaryByUserId = async (
+    req: ExpenseCategorySummaryRequest,
+    res: Response,
+  ) => {
     const userId = req.user?.id!;
     const { month, year } = req.query;
 
-    const result = await this.expenseService.getCategorySummaryByUserId(userId, { month, year });
+    const result = await this.expenseService.getCategorySummaryByUserId(
+      userId,
+      { month, year },
+    );
 
     return res.status(StatusCodes.OK).send(result);
   };
 
-  public getMonthlyTrendByUserId = async (req: ExpenseMonthlyTrendRequest, res: Response) => {
+  public getMonthlyTrendByUserId = async (
+    req: ExpenseMonthlyTrendRequest,
+    res: Response,
+  ) => {
     const userId = req.user?.id!;
     const { year } = req.query;
 
-    const result = await this.expenseService.getMonthlyTrendByUserId(userId, { year });
+    const result = await this.expenseService.getMonthlyTrendByUserId(userId, {
+      year,
+    });
 
     return res.status(StatusCodes.OK).send(result);
   };
