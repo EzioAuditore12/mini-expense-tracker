@@ -14,10 +14,14 @@ import type { GetExpenseSummaryResponse } from '@/validators/main/expense/get-su
 import type { GetCategorySummaryResponse } from '@/validators/main/expense/get-category-summary/response.schema';
 import type { GetMonthlyTrendResponse } from '@/validators/main/expense/get-monthly-trend/response.schema';
 import { Category } from '@/db/tables/enums/category.enum';
+import { convertObjectsToCsv } from '@/utils/convert-objects-to-csv';
+import { ExportExpenses } from '@/validators/main/expense/export/request.schema';
 
 export class ExpenseService {
   private readonly database = db;
   private readonly table = expenseTable;
+
+  private readonly convertObjectsToCsv = convertObjectsToCsv;
 
   public async create(insertExpense: ExpenseInsert): Promise<Expense> {
     return await this.database
@@ -225,6 +229,35 @@ export class ExpenseService {
 
       spent: Number(item.spent ?? 0),
     }));
+  }
+
+  public async exportToCsvByUserId(
+    userId: string,
+    data: ExportExpenses,
+  ): Promise<string> {
+    const expenses = await this.getAllByUserIdWithoutPagination(userId, data);
+
+    return this.convertObjectsToCsv(expenses, ['id', 'userId']);
+  }
+
+  private async getAllByUserIdWithoutPagination(
+    userId: string,
+    data: ExportExpenses,
+  ): Promise<Expense[]> {
+    const { search, category, startDate, endDate } = data;
+
+    const conditions = [eq(this.table.userId, userId)];
+
+    if (search) conditions.push(like(this.table.note, `%${search}%`));
+    if (category) conditions.push(eq(this.table.category, category));
+    if (startDate) conditions.push(gte(this.table.expenseDate, startDate));
+    if (endDate) conditions.push(lte(this.table.expenseDate, endDate));
+
+    return await this.database
+      .select()
+      .from(this.table)
+      .where(and(...conditions))
+      .orderBy(desc(this.table.expenseDate));
   }
 
   private async getAllWithAmountAndCategoryByUserId(

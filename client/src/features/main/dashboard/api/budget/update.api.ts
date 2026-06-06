@@ -1,4 +1,4 @@
-import { authenticatedTypedFetch } from '@/lib/auth.fetch';
+import { authenticatedTypedFetch } from '@/lib/auth-fetch';
 import type { UpdateBudgetParam } from '../../schemas/budget/update/param.schema';
 import { updateBudgetResponseSchema } from '../../schemas/budget/update/response.schema';
 

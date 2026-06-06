@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { authenticatedTypedFetch } from '@/lib/auth.fetch';
+import { authenticatedTypedFetch } from '@/lib/auth-fetch';
 
 export const deleteExpenseApi = async (id: string) => {
   return await authenticatedTypedFetch({

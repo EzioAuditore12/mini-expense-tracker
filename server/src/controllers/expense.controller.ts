@@ -9,6 +9,7 @@ import type { UpdateExpenseRequest } from '@/validators/main/expense/update/requ
 import type { ExpenseParamRequest } from '@/validators/main/expense/param';
 import type { GetAllExpensesRequest } from '@/validators/main/expense/get-all/request';
 import type { ExpenseDeleteParamRequest } from '@/validators/main/expense/delete/request';
+import type { ExportExpensesRequest } from '@/validators/main/expense/export/request.schema';
 
 export class ExpenseController {
   private readonly expenseService = expenseService;
@@ -101,6 +102,24 @@ export class ExpenseController {
     const result = await this.expenseService.getMonthlyTrendByUserId(userId);
 
     return res.status(StatusCodes.OK).send(result);
+  };
+
+  public exportCsvByUserId = async (
+    req: ExportExpensesRequest,
+    res: Response,
+  ) => {
+    const userId = req.user?.id!;
+
+    const csv = await this.expenseService.exportToCsvByUserId(
+      userId,
+      req.query,
+    );
+
+    res.header('Content-Type', 'text/csv');
+
+    res.attachment('expenses.csv');
+
+    return res.send(csv);
   };
 }
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { SearchIcon } from 'lucide-react';
+import { DownloadIcon, SearchIcon } from 'lucide-react';
 import { useDebounce } from 'use-debounce';
 import type { ComponentProps, Dispatch, SetStateAction } from 'react';
 
@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils';
 import { categoryEnum } from '../../schemas/enums/categrory-enum.schema';
 import type { GetAllExpensesParam } from '../../schemas/get-all/param.schema';
 import { DateRangePicker } from './date-range-picker';
+import { Button } from '@/components/ui/button';
 
 export type ExpenseFiltersValue = Pick<
   GetAllExpensesParam,
@@ -25,11 +26,19 @@ export type ExpenseFiltersValue = Pick<
 
 interface ExpenseFiltersProps extends Omit<ComponentProps<'div'>, 'onChange'> {
   value: ExpenseFiltersValue;
-
   onChange: Dispatch<SetStateAction<ExpenseFiltersValue>>;
+  onExportCsv?: (filters: ExpenseFiltersValue) => void;
+  isExporting?: boolean;
 }
 
-export function ExpenseFilters({ className, value, onChange, ...props }: ExpenseFiltersProps) {
+export function ExpenseFilters({
+  className,
+  value,
+  onChange,
+  onExportCsv,
+  isExporting,
+  ...props
+}: ExpenseFiltersProps) {
   const [localSearch, setLocalSearch] = useState(value.search ?? '');
   const [debouncedSearch] = useDebounce(localSearch, 500);
 
@@ -93,6 +102,11 @@ export function ExpenseFilters({ className, value, onChange, ...props }: Expense
           })
         }
       />
+
+      <Button variant="outline" onClick={() => onExportCsv?.(value)} disabled={isExporting}>
+        {' '}
+        <DownloadIcon /> {isExporting ? 'Exporting...' : 'Export CSV'}{' '}
+      </Button>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { authenticatedTypedFetch } from '@/lib/auth.fetch';
+import { authenticatedTypedFetch } from '@/lib/auth-fetch';
 
 import type { CreateExpenseParam } from '../schemas/create/param.schema';
 import { expenseSchema } from '../schemas/expense.schema';

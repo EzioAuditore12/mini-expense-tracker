@@ -20,6 +20,7 @@ import { useDeleteExpense } from '@/features/main/expense/hooks/mutations/use-de
 import { useEditExpense } from '@/features/main/expense/hooks/mutations/use-edit-expense';
 
 import type { Expense } from '@/features/main/expense/schemas/expense.schema';
+import { useExportExpenses } from '@/features/main/expense/hooks/queries/use-export-expenses';
 
 export const Route = createFileRoute('/(main)/expense/')({
   component: RouteComponent,
@@ -39,6 +40,7 @@ function RouteComponent() {
   const { mutate, isPending } = useCreateExpense();
   const { mutate: deleteExpense } = useDeleteExpense();
   const { mutate: editExpense, isPending: isEditPending } = useEditExpense();
+  const { exportExpenses, isExporting } = useExportExpenses();
 
   if (isLoading) return <div>Loading..</div>;
 
@@ -51,7 +53,12 @@ function RouteComponent() {
           <AddExpenseFormDialog handleSubmit={mutate} isPending={isPending} />
         }
       />
-      <ExpenseFilters value={filters} onChange={setFilters} />
+      <ExpenseFilters
+        value={filters}
+        onChange={setFilters}
+        onExportCsv={exportExpenses}
+        isExporting={isExporting}
+      />
       <ExpenseDataTable
         columns={expenseColumns({
           onEdit: (id) => {

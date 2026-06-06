@@ -1,4 +1,4 @@
-import { authenticatedTypedFetch } from '@/lib/auth.fetch';
+import { authenticatedTypedFetch } from '@/lib/auth-fetch';
 
 import { getExpenseCategorySummaryResponseSchema } from '../../schemas/expense/category-summary/response.schema';
 

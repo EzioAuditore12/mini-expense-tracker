@@ -22,6 +22,8 @@ import { getMonthlyTrendResponseSchema } from '@/validators/main/expense/get-mon
 import { getAllExpensesResponseSchema } from '@/validators/main/expense/get-all/response';
 import { expenseDeleteResponseSchema } from '@/validators/main/expense/delete/response';
 import { expenseDeleteParamSchema } from '@/validators/main/expense/delete/request';
+import { exportExpensesSchema } from '@/validators/main/expense/export/request.schema';
+import { exportExpensesResponseSchema } from '@/validators/main/expense/export/response.schema';
 
 export const expenseRegistry = new OpenAPIRegistry();
 export const expenseRouter: Router = express.Router();
@@ -98,6 +100,24 @@ expenseRouter.get(
   //@ts-ignores
   validate({ query: getAllExpensesSchema }),
   expenseController.getAllByUserId,
+);
+
+expenseRegistry.registerPath({
+  method: 'get',
+  path: '/expense/export',
+  tags: ['Expense'],
+  request: {
+    query: exportExpensesSchema,
+  },
+  responses: createApiResponse(exportExpensesResponseSchema, 'Success'),
+});
+
+expenseRouter.get(
+  '/export',
+  authMiddleware,
+  //@ts-ignores
+  validate({ query: exportExpensesSchema }),
+  expenseController.exportCsvByUserId,
 );
 
 expenseRegistry.registerPath({
