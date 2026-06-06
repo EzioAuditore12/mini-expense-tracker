@@ -36,7 +36,7 @@ export const budgetTable = sqliteTable(
 
     limitAmount: real('limit_amount').notNull(),
 
-    month: integer('month').notNull(),
+    month: integer('month').notNull(), // 1–12
 
     year: integer('year').notNull(),
 

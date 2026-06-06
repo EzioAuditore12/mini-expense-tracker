@@ -4,6 +4,10 @@ import { SnowFlakeId } from '@/utils/snowflake';
 
 export const BLACKLISTED_REFRESH_TOKEN_TABLE_NAME = 'blacklisted_refresh_token';
 
+/**
+ * Tracks revoked refresh tokens to prevent token replay attacks.
+ * When a refresh token is used, it's blacklisted here before issuing new tokens.
+ */
 export const blackListedRefreshTokenTable = sqliteTable(
   BLACKLISTED_REFRESH_TOKEN_TABLE_NAME,
   {

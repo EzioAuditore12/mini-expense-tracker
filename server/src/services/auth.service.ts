@@ -21,6 +21,10 @@ import type { LoginRequestBody } from '@/validators/auth/login/request';
 import type { LoginResponseBody } from '@/validators/auth/login/response';
 import type { RefreshResponseBody } from '@/validators/auth/refresh/response.schema';
 
+/**
+ * Handles all authentication flows: register, login, and token refresh.
+ * Uses argon2 for password hashing and JWT access/refresh token pairs.
+ */
 export class AuthService {
   private readonly database = db;
   private readonly table = blackListedRefreshTokenTable;
@@ -89,6 +93,10 @@ export class AuthService {
     };
   }
 
+  /**
+   * Token rotation: validate the refresh token, blacklist it to prevent
+   * replay attacks, then issue a brand-new access + refresh pair.
+   */
   public async refresh(token: string): Promise<RefreshResponseBody> {
     const isBlacklistedToken = await this.isBlacklistedRefreshToken(token);
 

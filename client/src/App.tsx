@@ -3,7 +3,10 @@ import { RouterProvider } from '@tanstack/react-router';
 
 import { getRouter } from '@/lib/router';
 
-// Fix: Use ReturnType to get the type of the router instance
+/**
+ * Module augmentation: registers the router type globally so TanStack Router
+ * provides type-safe <Link>, useNavigate(), and route params across the app.
+ */
 declare module '@tanstack/react-router' {
   interface Register {
     router: ReturnType<typeof getRouter>;

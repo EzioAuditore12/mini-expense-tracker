@@ -1,4 +1,5 @@
 import { and, count, desc, eq, ne, sum } from 'drizzle-orm';
+import { startOfMonth, endOfMonth } from 'date-fns';
 
 import { db } from '@/db';
 import {
@@ -10,10 +11,10 @@ import {
 
 import type { GetAllBudgets } from '@/validators/main/budget/get-all/request';
 import type { GetAllBudgetsResponse } from '@/validators/main/budget/get-all/response';
-import { Category } from '@/db/tables/enums/category.enum';
+import type { Category } from '@/db/tables/enums/category.enum';
 import { expenseService } from './expense.service';
 import {
-  BudgetStatusEnum,
+  type BudgetStatusEnum,
   BudgetStatusResponse,
 } from '@/validators/main/budget/status/response.schema';
 
@@ -117,6 +118,10 @@ export class BudgetService {
     };
   }
 
+  /**
+   * App-level unique constraint check (userId + category + month + year).
+   * `excludeId` allows the update path to skip the record being updated.
+   */
   public async checkUniqueConstraint(
     userId: string,
     category: Category,
@@ -131,9 +136,7 @@ export class BudgetService {
       eq(this.table.year, year),
     ];
 
-    if (excludeId) {
-      conditions.push(ne(this.table.id, excludeId));
-    }
+    if (excludeId) conditions.push(ne(this.table.id, excludeId));
 
     const existing = await this.database
       .select({ id: this.table.id })
@@ -144,6 +147,11 @@ export class BudgetService {
     return existing;
   }
 
+  /**
+   * Computes budget vs. actual spending status for a given month/year.
+   * Joins budget limits with expense totals per category and derives
+   * remaining amount, usage percentage, and a status label.
+   */
   public async getBudgetStatusByUserId(
     userId: string,
     month: number,
@@ -154,9 +162,9 @@ export class BudgetService {
       year,
     });
 
-    const startDate = new Date(year, month - 1, 1);
-
-    const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+    // Build date range for the entire month (1st 00:00 to last day 23:59:59)
+    const startDate = startOfMonth(new Date(year, month - 1));
+    const endDate = endOfMonth(new Date(year, month - 1));
 
     const expenseTotals = await this.expenseService.getTotalSpentByUserId(
       userId,
@@ -201,6 +209,7 @@ export class BudgetService {
     });
   }
 
+  /** Budget status thresholds: >=100% over, >=80% approaching, else on track */
   private setBudgetStatus(percentage: number): BudgetStatusEnum {
     let budgetStatus: BudgetStatusEnum;
 

@@ -51,6 +51,11 @@ export class ExpenseService {
       .then((res) => (res.length > 0 ? res[0] : null));
   }
 
+  /**
+   * Paginated query with optional filters (search, category, date range).
+   * Filters are built dynamically — only non-null params generate WHERE clauses.
+   * Runs the data query and total count in parallel for efficiency.
+   */
   public async getAllByUserId(
     userId: string,
     pagination: GetAllExpenses,
@@ -112,6 +117,10 @@ export class ExpenseService {
     await this.database.delete(this.table).where(eq(this.table.id, id));
   }
 
+  /**
+   * Ownership check: ensures the expense exists AND belongs to the given user.
+   * Used before update/delete operations to prevent unauthorized access.
+   */
   public async isCreatorAndExisting(
     userId: string,
     expenseId: string,
@@ -125,6 +134,11 @@ export class ExpenseService {
     return !!id;
   }
 
+  /**
+   * Dashboard summary: computes aggregate stats (total, count, highest, most-used)
+   * from all expenses in-memory. Acceptable for moderate data volumes; consider
+   * SQL aggregation if datasets grow large.
+   */
   public async getSummaryByUserId(
     userId: string,
   ): Promise<GetExpenseSummaryResponse> {
@@ -159,6 +173,10 @@ export class ExpenseService {
     }));
   }
 
+  /**
+   * Groups expenses by month/year for the spending trend chart.
+   * Aggregation is done in JS to avoid complex SQL date functions on SQLite.
+   */
   public async getMonthlyTrendByUserId(
     userId: string,
   ): Promise<GetMonthlyTrendResponse> {
@@ -231,6 +249,7 @@ export class ExpenseService {
     }));
   }
 
+  /** Export expenses as CSV, omitting internal IDs (id, userId) */
   public async exportToCsvByUserId(
     userId: string,
     data: ExportExpenses,

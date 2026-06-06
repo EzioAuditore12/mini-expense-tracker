@@ -1,5 +1,9 @@
 import expressHelmet from 'helmet';
 
+/**
+ * Security headers via helmet. The CSP directives are relaxed to allow
+ * Swagger UI assets (JS, CSS, fonts) loaded from cdn.jsdelivr.net.
+ */
 const helmet = expressHelmet({
   contentSecurityPolicy: {
     directives: {

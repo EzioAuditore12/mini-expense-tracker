@@ -4,6 +4,7 @@ import validate from 'express-zod-safe';
 
 import { createApiResponse } from '@/lib/open-api/open-api-response-builder';
 import { requestBody } from '@/lib/open-api/open-api-request-builder';
+import { TAGS, ROUTE_PATHS } from '@/lib/constants/routes';
 
 import { authController } from '@/controllers/auth.controller';
 
@@ -19,8 +20,9 @@ export const authRouter: Router = express.Router();
 
 authRegistry.registerPath({
   method: 'post',
-  path: '/auth/register',
-  tags: ['Auth'],
+  path: `${ROUTE_PATHS.AUTH}/register`,
+  description: 'Register a new user account with email and password.',
+  tags: [TAGS.AUTH],
   request: {
     body: requestBody(registerRequestSchema),
   },
@@ -35,8 +37,9 @@ authRouter.post(
 
 authRegistry.registerPath({
   method: 'post',
-  path: '/auth/login',
-  tags: ['Auth'],
+  path: `${ROUTE_PATHS.AUTH}/login`,
+  description: 'Authenticate with email and password to receive access and refresh tokens.',
+  tags: [TAGS.AUTH],
   request: {
     body: requestBody(loginRequestSchema),
   },
@@ -51,8 +54,9 @@ authRouter.post(
 
 authRegistry.registerPath({
   method: 'post',
-  path: '/auth/refresh',
-  tags: ['Auth'],
+  path: `${ROUTE_PATHS.AUTH}/refresh`,
+  description: 'Exchange a valid refresh token for a new access token.',
+  tags: [TAGS.AUTH],
   request: {
     body: requestBody(refreshRequestSchema),
   },

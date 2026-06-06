@@ -8,7 +8,6 @@ export function getRouter() {
   const queryClient = new QueryClient();
   const router = createRouter({
     routeTree,
-    // optionally expose the QueryClient via router context
     context: { queryClient },
     scrollRestoration: true,
     defaultPreload: 'intent',

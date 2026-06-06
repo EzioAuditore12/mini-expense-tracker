@@ -21,6 +21,7 @@ export function generateOpenAPIDocument(): OpenAPIDocument {
     expenseRegistry,
     budgetRegistry,
   ]);
+
   const generator = new OpenApiGeneratorV3(registry.definitions);
 
   return generator.generateDocument({

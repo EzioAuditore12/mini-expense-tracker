@@ -6,6 +6,8 @@ import { authMiddleware } from '@/middlewares/auth.middleware';
 
 import { createApiResponse } from '@/lib/open-api/open-api-response-builder';
 import { requestBody } from '@/lib/open-api/open-api-request-builder';
+import { authHeaderSchema } from '@/lib/open-api/open-api-auth-header';
+import { TAGS, ROUTE_PATHS } from '@/lib/constants/routes';
 
 import { expenseController } from '@/controllers/expense.controller';
 
@@ -30,9 +32,11 @@ export const expenseRouter: Router = express.Router();
 
 expenseRegistry.registerPath({
   method: 'post',
-  path: '/expense',
-  tags: ['Expense'],
+  path: ROUTE_PATHS.EXPENSE,
+  description: 'Create a new expense entry for the authenticated user.',
+  tags: [TAGS.EXPENSE],
   request: {
+    headers: authHeaderSchema,
     body: requestBody(createExpenseSchema),
   },
   responses: createApiResponse(createExpenseResponseSchema, 'Success'),
@@ -47,8 +51,12 @@ expenseRouter.post(
 
 expenseRegistry.registerPath({
   method: 'get',
-  path: '/expense/summary',
-  tags: ['Expense'],
+  path: `${ROUTE_PATHS.EXPENSE}/summary`,
+  description: 'Get a spending summary (total, average, count) for the authenticated user.',
+  tags: [TAGS.EXPENSE],
+  request: {
+    headers: authHeaderSchema,
+  },
   responses: createApiResponse(getExpenseSummaryResponseSchema, 'Success'),
 });
 
@@ -60,8 +68,12 @@ expenseRouter.get(
 
 expenseRegistry.registerPath({
   method: 'get',
-  path: '/expense/category-summary',
-  tags: ['Expense'],
+  path: `${ROUTE_PATHS.EXPENSE}/category-summary`,
+  description: 'Get expense totals grouped by category for the authenticated user.',
+  tags: [TAGS.EXPENSE],
+  request: {
+    headers: authHeaderSchema,
+  },
   responses: createApiResponse(getCategorySummaryResponseSchema, 'Success'),
 });
 
@@ -73,8 +85,12 @@ expenseRouter.get(
 
 expenseRegistry.registerPath({
   method: 'get',
-  path: '/expense/monthly-trend',
-  tags: ['Expense'],
+  path: `${ROUTE_PATHS.EXPENSE}/monthly-trend`,
+  description: 'Get month-over-month spending trends for the authenticated user.',
+  tags: [TAGS.EXPENSE],
+  request: {
+    headers: authHeaderSchema,
+  },
   responses: createApiResponse(getMonthlyTrendResponseSchema, 'Success'),
 });
 
@@ -86,9 +102,11 @@ expenseRouter.get(
 
 expenseRegistry.registerPath({
   method: 'get',
-  path: '/expense',
-  tags: ['Expense'],
+  path: ROUTE_PATHS.EXPENSE,
+  description: 'List all expenses for the authenticated user with optional filtering, sorting, and pagination.',
+  tags: [TAGS.EXPENSE],
   request: {
+    headers: authHeaderSchema,
     query: getAllExpensesSchema,
   },
   responses: createApiResponse(getAllExpensesResponseSchema, 'Success'),
@@ -104,9 +122,11 @@ expenseRouter.get(
 
 expenseRegistry.registerPath({
   method: 'get',
-  path: '/expense/export',
-  tags: ['Expense'],
+  path: `${ROUTE_PATHS.EXPENSE}/export`,
+  description: 'Export the authenticated user\'s expenses as a CSV file.',
+  tags: [TAGS.EXPENSE],
   request: {
+    headers: authHeaderSchema,
     query: exportExpensesSchema,
   },
   responses: createApiResponse(exportExpensesResponseSchema, 'Success'),
@@ -122,8 +142,9 @@ expenseRouter.get(
 
 expenseRegistry.registerPath({
   method: 'get',
-  path: '/expense/{id}',
-  tags: ['Expense'],
+  path: `${ROUTE_PATHS.EXPENSE}/{id}`,
+  description: 'Retrieve a single expense by its unique ID.',
+  tags: [TAGS.EXPENSE],
   request: {
     params: expenseParamSchema,
   },
@@ -138,9 +159,11 @@ expenseRouter.get(
 
 expenseRegistry.registerPath({
   method: 'patch',
-  path: '/expense/{id}',
-  tags: ['Expense'],
+  path: `${ROUTE_PATHS.EXPENSE}/{id}`,
+  description: 'Update an existing expense by its ID. Only the fields provided will be modified.',
+  tags: [TAGS.EXPENSE],
   request: {
+    headers: authHeaderSchema,
     params: expenseParamSchema,
     body: requestBody(updateExpenseSchema),
   },
@@ -156,9 +179,11 @@ expenseRouter.patch(
 
 expenseRegistry.registerPath({
   method: 'delete',
-  path: '/expense/{id}',
-  tags: ['Expense'],
+  path: `${ROUTE_PATHS.EXPENSE}/{id}`,
+  description: 'Permanently delete an expense by its ID.',
+  tags: [TAGS.EXPENSE],
   request: {
+    headers: authHeaderSchema,
     params: expenseDeleteParamSchema,
   },
   responses: createApiResponse(expenseDeleteResponseSchema, 'Success'),

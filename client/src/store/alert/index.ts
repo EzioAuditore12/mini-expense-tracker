@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 import type { AlertState } from './type';
 
+/**
+ * Global alert dialog store — drives the <GlobalAlertDialog /> overlay.
+ * Supports typed alerts (info, success, error, warning) with custom title + message.
+ */
 export const useAlertStore = create<AlertState>((set) => ({
   isOpen: false,
   title: 'Alert',
@@ -17,14 +21,20 @@ export const useAlertStore = create<AlertState>((set) => ({
   hideAlert: () => set({ isOpen: false }),
 }));
 
+/**
+ * Monkey-patch window.alert so all native alert() calls (including from
+ * third-party code) route through the custom dialog instead of blocking the UI.
+ * Auto-classifies the alert type by scanning for keywords in the message.
+ */
 if (typeof window !== 'undefined') {
-  window.alert = (message: any) => {
+  window.alert = (message: unknown) => {
     const messageStr = String(message);
     const lowerMessage = messageStr.toLowerCase();
 
     let type: 'info' | 'success' | 'error' | 'warning' = 'info';
     let title = 'Alert';
 
+    // Keyword-based auto-classification of alert type
     if (
       lowerMessage.includes('error') ||
       lowerMessage.includes('fail') ||

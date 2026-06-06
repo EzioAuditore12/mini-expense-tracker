@@ -31,6 +31,7 @@ export const userSchema = createSelectSchema(userTable, {
     .max(240)
     .transform((val) => val.toLowerCase()),
 });
+
 export const publicUserSchema = userSchema.omit({ password: true });
 
 export const insertUserSchema = createInsertSchema(userTable, {

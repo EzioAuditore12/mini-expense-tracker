@@ -1,5 +1,5 @@
 import { useState, type ComponentProps } from 'react';
-import { PlusIcon } from 'lucide-react';
+import { PlusIcon, WalletIcon } from 'lucide-react';
 
 import {
   Dialog,
@@ -14,6 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Field, FieldGroup } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
 
 import { cn } from '@/lib/utils';
 
@@ -43,12 +44,14 @@ const currentYear = String(getYear(currentDate));
 interface CreateBudgetFormDialogProps extends ComponentProps<typeof Button> {
   isPending: boolean;
   handleSubmit: (data: CreateBudgetParam) => void;
+  emptyState?: boolean;
 }
 
 export function AddBudgetFormDialog({
   className,
   handleSubmit,
   isPending,
+  emptyState = false,
   ...props
 }: CreateBudgetFormDialogProps) {
   const [open, setOpen] = useState<boolean>(false);
@@ -76,14 +79,36 @@ export function AddBudgetFormDialog({
     },
   });
 
+  const triggerButton = (
+    <DialogTrigger asChild>
+      <Button className={cn(className)} size="lg" {...props}>
+        <PlusIcon />
+        Add Budget
+      </Button>
+    </DialogTrigger>
+  );
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className={cn(className)} size="lg" {...props}>
-          <PlusIcon />
-          Add Budget
-        </Button>
-      </DialogTrigger>
+      {emptyState ? (
+        <Card className="border-dashed">
+          <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+            <div className="bg-muted mb-4 rounded-full p-3">
+              <WalletIcon className="text-muted-foreground h-8 w-8" />
+            </div>
+
+            <h3 className="text-lg font-semibold">No budgets set</h3>
+
+            <p className="text-muted-foreground mt-1 mb-6 max-w-sm text-sm">
+              Please add a budget first to start tracking your spending against category limits.
+            </p>
+
+            {triggerButton}
+          </CardContent>
+        </Card>
+      ) : (
+        triggerButton
+      )}
 
       <DialogContent className="sm:max-w-sm">
         <form

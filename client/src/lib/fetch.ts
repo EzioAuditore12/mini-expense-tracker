@@ -4,6 +4,10 @@ export type FetchOptions = RequestInit;
 
 export type HttpMethods = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
+/**
+ * Converts an object of key-value pairs into a URL search string.
+ * Handles arrays (repeated params), null (empty string), and undefined (skipped).
+ */
 export const buildQueryParams = (query?: object) => {
   if (!query) return '';
 
@@ -40,6 +44,10 @@ interface TypedFetchProps<S extends s.StandardSchemaV1> extends Omit<
   contentType?: string | null;
 }
 
+/**
+ * Type-safe fetch wrapper that validates the response JSON against a
+ * Standard Schema (Zod-compatible). Throws on HTTP errors or validation failures.
+ */
 export const typedFetch = async <S extends s.StandardSchemaV1>({
   url,
   schema,
@@ -71,6 +79,7 @@ export const typedFetch = async <S extends s.StandardSchemaV1>({
     ...props,
   });
 
+  // Try to extract a structured error message from the response body
   if (!response.ok) {
     const errorBody = await response.text();
     try {
@@ -83,6 +92,7 @@ export const typedFetch = async <S extends s.StandardSchemaV1>({
 
   const json = await response.json();
 
+  // Validate the parsed JSON against the provided schema
   const result = s.safeParse(schema, json);
 
   if (result.issues) throw new Error(JSON.stringify(result.issues));

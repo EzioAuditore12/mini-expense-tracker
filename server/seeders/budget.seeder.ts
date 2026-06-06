@@ -4,9 +4,15 @@ import { budgetService } from '../src/services/budget.service';
 
 import { categoryEnum } from '../src/db/tables/enums/category.enum';
 
-const USER_ID = '91649bff-37ee-441a-ae96-b6a36782bd21';
+import { env } from '../src/env';
+
+const USER_ID = env.TEST_USER_ID;
+
 
 async function seedBudgets() {
+
+  console.log(USER_ID)
+
   try {
     const currentDate = new Date();
 

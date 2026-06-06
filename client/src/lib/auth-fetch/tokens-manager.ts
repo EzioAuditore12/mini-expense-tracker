@@ -2,6 +2,11 @@ import { useAuthStore } from '@/store/auth';
 
 import { refreshTokensApi } from '@/features/auth/refresh/api/refresh-tokens.api';
 
+/**
+ * Singleton promise guard: prevents multiple concurrent refresh requests.
+ * If a refresh is already in-flight, subsequent calls reuse the same promise
+ * instead of firing parallel refresh API calls (which would race-condition).
+ */
 let refreshPromise: Promise<void> | null = null;
 
 export const refreshAccessToken = async (): Promise<void> => {
@@ -28,11 +33,11 @@ export const refreshAccessToken = async (): Promise<void> => {
         refreshToken: newRefreshToken,
       });
     } catch (error) {
-      // If refresh fails, we must log out
+      // If refresh fails (e.g. refresh token expired), force logout
       useAuthStore.getState().logout();
       throw error;
     } finally {
-      // Reset the promise so future failures trigger a new refresh
+      // Reset so future calls trigger a new refresh attempt
       refreshPromise = null;
     }
   })();

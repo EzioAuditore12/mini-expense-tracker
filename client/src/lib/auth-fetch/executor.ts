@@ -4,6 +4,12 @@ import { useAuthStore } from '@/store/auth';
 import { buildQueryParams } from '../fetch';
 import { refreshAccessToken } from './tokens-manager';
 
+/**
+ * Core authenticated fetch executor.
+ * Automatically attaches the JWT access token, serializes query params,
+ * and handles Content-Type for JSON vs FormData bodies.
+ * On a 401 response, transparently refreshes the access token and retries once.
+ */
 export const executeAuthenticatedRequest = async ({
   baseUrl = env.VITE_PUBLIC_SERVER_URL,
   url,
@@ -54,6 +60,7 @@ export const executeAuthenticatedRequest = async ({
     ...props,
   });
 
+  // If the server responds with 401, attempt a silent token refresh and retry
   if (response.status === responseStatus) {
     try {
       await refreshAccessToken();
@@ -62,6 +69,7 @@ export const executeAuthenticatedRequest = async ({
 
       authHeaders.Authorization = `Bearer ${newAccessToken}`;
 
+      // Retry the original request with the new token
       response = await fetch(apiUrl, {
         ...requestOptions,
 

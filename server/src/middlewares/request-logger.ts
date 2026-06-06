@@ -6,17 +6,23 @@ import pinoHttp from 'pino-http';
 
 import { env } from '@/env';
 
+// Configure pino: use pretty-print in dev, JSON in production
 const logger = pino({
   level: env.isProduction ? 'info' : 'debug',
   transport: env.isProduction ? undefined : { target: 'pino-pretty' },
 });
 
+/** Map HTTP status codes to pino log levels (5xx=error, 4xx=warn, rest=info) */
 const getLogLevel = (status: number) => {
   if (status >= StatusCodes.INTERNAL_SERVER_ERROR) return 'error';
   if (status >= StatusCodes.BAD_REQUEST) return 'warn';
   return 'info';
 };
 
+/**
+ * Injects a unique request ID (or reuses an existing X-Request-Id header)
+ * so every log line for a request can be correlated.
+ */
 const addRequestId = (req: Request, res: Response, next: NextFunction) => {
   const existingId = req.headers['x-request-id'] as string;
   const requestId = existingId || randomUUID();
@@ -45,6 +51,10 @@ const httpLogger = pinoHttp({
   },
 });
 
+/**
+ * Monkey-patches res.send in development to capture the response body
+ * onto res.locals for debugging/logging purposes.
+ */
 const captureResponseBody = (
   _req: Request,
   res: Response,
@@ -60,4 +70,5 @@ const captureResponseBody = (
   next();
 };
 
+// Pipeline order: assign request ID → capture response body → log with pino
 export default [addRequestId, captureResponseBody, httpLogger];

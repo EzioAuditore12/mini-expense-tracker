@@ -3,6 +3,10 @@ import * as s from 'standard-parse';
 import { executeAuthenticatedRequest } from './executor';
 import type { BaseAuthenticatedFetchProps } from './type';
 
+/**
+ * Untyped authenticated fetch — automatically detects CSV responses
+ * and returns a Blob; otherwise returns parsed JSON.
+ */
 export const authenticatedFetch = async (props: BaseAuthenticatedFetchProps) => {
   const response = await executeAuthenticatedRequest(props);
 
@@ -21,6 +25,10 @@ interface TypedAuthenticatedFetchProps<
   schema: S;
 }
 
+/**
+ * Schema-validated authenticated fetch — parses response JSON and validates
+ * it against a Standard Schema (Zod-compatible). Throws on validation failure.
+ */
 export const authenticatedTypedFetch = async <S extends s.StandardSchemaV1>({
   schema,
 

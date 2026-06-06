@@ -9,6 +9,7 @@ import requestLogger from '@/middlewares/request-logger';
 import helmet from '@/middlewares/helmet';
 
 import { env } from '@/env';
+import { ROUTE_PATHS } from '@/lib/constants/routes';
 
 import { healthCheckRouter } from '@/routers/health-check.router';
 import { authRouter } from './routers/auth.router';
@@ -32,11 +33,11 @@ app.use(rateLimiter);
 app.use(requestLogger);
 
 // Routes
-app.use('/health-check', healthCheckRouter);
-app.use('/auth', authRouter);
-app.use('/user', userRouter);
-app.use('/expense', expenseRouter);
-app.use('/budget', budgetRouter);
+app.use(ROUTE_PATHS.HEALTH_CHECK, healthCheckRouter);
+app.use(ROUTE_PATHS.AUTH, authRouter);
+app.use(ROUTE_PATHS.USER, userRouter);
+app.use(ROUTE_PATHS.EXPENSE, expenseRouter);
+app.use(ROUTE_PATHS.BUDGET, budgetRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

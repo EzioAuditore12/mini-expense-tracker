@@ -13,9 +13,9 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRouteImport } from './app/__root'
 import { Route as mainLayoutRouteImport } from './app/(main)/layout'
 import { Route as authLayoutRouteImport } from './app/(auth)/layout'
-import { Route as mainProfilePageRouteImport } from './app/(main)/profile/page'
 import { Route as maindashboardPageRouteImport } from './app/(main)/(dashboard)/page'
 
+const mainProfilePageLazyRouteImport = createFileRoute('/(main)/profile/')()
 const mainExpensePageLazyRouteImport = createFileRoute('/(main)/expense/')()
 const authRegisterPageLazyRouteImport = createFileRoute('/(auth)/register/')()
 const authLoginPageLazyRouteImport = createFileRoute('/(auth)/login/')()
@@ -28,6 +28,13 @@ const authLayoutRoute = authLayoutRouteImport.update({
   id: '/(auth)',
   getParentRoute: () => rootRouteImport,
 } as any)
+const mainProfilePageLazyRoute = mainProfilePageLazyRouteImport
+  .update({
+    id: '/profile/',
+    path: '/profile/',
+    getParentRoute: () => mainLayoutRoute,
+  } as any)
+  .lazy(() => import('./app/(main)/profile/page.lazy').then((d) => d.Route))
 const mainExpensePageLazyRoute = mainExpensePageLazyRouteImport
   .update({
     id: '/expense/',
@@ -49,11 +56,6 @@ const authLoginPageLazyRoute = authLoginPageLazyRouteImport
     getParentRoute: () => authLayoutRoute,
   } as any)
   .lazy(() => import('./app/(auth)/login/page.lazy').then((d) => d.Route))
-const mainProfilePageRoute = mainProfilePageRouteImport.update({
-  id: '/profile/',
-  path: '/profile/',
-  getParentRoute: () => mainLayoutRoute,
-} as any)
 const maindashboardPageRoute = maindashboardPageRouteImport.update({
   id: '/(dashboard)/',
   path: '/',
@@ -62,42 +64,42 @@ const maindashboardPageRoute = maindashboardPageRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof maindashboardPageRoute
-  '/profile/': typeof mainProfilePageRoute
   '/login/': typeof authLoginPageLazyRoute
   '/register/': typeof authRegisterPageLazyRoute
   '/expense/': typeof mainExpensePageLazyRoute
+  '/profile/': typeof mainProfilePageLazyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof maindashboardPageRoute
-  '/profile': typeof mainProfilePageRoute
   '/login': typeof authLoginPageLazyRoute
   '/register': typeof authRegisterPageLazyRoute
   '/expense': typeof mainExpensePageLazyRoute
+  '/profile': typeof mainProfilePageLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(auth)': typeof authLayoutRouteWithChildren
   '/(main)': typeof mainLayoutRouteWithChildren
   '/(main)/(dashboard)/': typeof maindashboardPageRoute
-  '/(main)/profile/': typeof mainProfilePageRoute
   '/(auth)/login/': typeof authLoginPageLazyRoute
   '/(auth)/register/': typeof authRegisterPageLazyRoute
   '/(main)/expense/': typeof mainExpensePageLazyRoute
+  '/(main)/profile/': typeof mainProfilePageLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/profile/' | '/login/' | '/register/' | '/expense/'
+  fullPaths: '/' | '/login/' | '/register/' | '/expense/' | '/profile/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/profile' | '/login' | '/register' | '/expense'
+  to: '/' | '/login' | '/register' | '/expense' | '/profile'
   id:
     | '__root__'
     | '/(auth)'
     | '/(main)'
     | '/(main)/(dashboard)/'
-    | '/(main)/profile/'
     | '/(auth)/login/'
     | '/(auth)/register/'
     | '/(main)/expense/'
+    | '/(main)/profile/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -121,6 +123,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(main)/profile/': {
+      id: '/(main)/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof mainProfilePageLazyRouteImport
+      parentRoute: typeof mainLayoutRoute
+    }
     '/(main)/expense/': {
       id: '/(main)/expense/'
       path: '/expense'
@@ -141,13 +150,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/login/'
       preLoaderRoute: typeof authLoginPageLazyRouteImport
       parentRoute: typeof authLayoutRoute
-    }
-    '/(main)/profile/': {
-      id: '/(main)/profile/'
-      path: '/profile'
-      fullPath: '/profile/'
-      preLoaderRoute: typeof mainProfilePageRouteImport
-      parentRoute: typeof mainLayoutRoute
     }
     '/(main)/(dashboard)/': {
       id: '/(main)/(dashboard)/'
@@ -175,14 +177,14 @@ const authLayoutRouteWithChildren = authLayoutRoute._addFileChildren(
 
 interface mainLayoutRouteChildren {
   maindashboardPageRoute: typeof maindashboardPageRoute
-  mainProfilePageRoute: typeof mainProfilePageRoute
   mainExpensePageLazyRoute: typeof mainExpensePageLazyRoute
+  mainProfilePageLazyRoute: typeof mainProfilePageLazyRoute
 }
 
 const mainLayoutRouteChildren: mainLayoutRouteChildren = {
   maindashboardPageRoute: maindashboardPageRoute,
-  mainProfilePageRoute: mainProfilePageRoute,
   mainExpensePageLazyRoute: mainExpensePageLazyRoute,
+  mainProfilePageLazyRoute: mainProfilePageLazyRoute,
 }
 
 const mainLayoutRouteWithChildren = mainLayoutRoute._addFileChildren(

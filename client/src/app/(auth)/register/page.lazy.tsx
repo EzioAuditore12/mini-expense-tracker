@@ -24,9 +24,9 @@ function RouteComponent() {
             <div className="text-center text-sm">
               Already have an account?{' '}
               <Link
-                to="/register"
+                to="/login"
                 className="text-blue-600 underline underline-offset-4 hover:text-blue-800">
-                Sign Up
+                Sign In
               </Link>
             </div>
           </Stack>

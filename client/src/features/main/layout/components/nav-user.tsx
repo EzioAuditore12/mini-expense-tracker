@@ -1,4 +1,4 @@
-import { CreditCard, MoreVertical, Bell, UserCircle, LogOut } from 'lucide-react';
+import { MoreVertical, UserCircle, LogOut } from 'lucide-react';
 import type { ComponentProps } from 'react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -21,6 +21,7 @@ import {
 import { cn } from '@/lib/utils';
 
 import type { User } from '@/features/common/schemas/user.schema';
+import { Link } from '@tanstack/react-router';
 
 export interface NavUserProps extends ComponentProps<typeof SidebarMenu> {
   user: User;
@@ -68,17 +69,11 @@ export function NavUser({ className, user, handleLogout, ...props }: NavUserProp
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <UserCircle className="mr-2 h-4 w-4" />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard className="mr-2 h-4 w-4" />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell className="mr-2 h-4 w-4" />
-                Notifications
+              <DropdownMenuItem asChild>
+                <Link to="/profile">
+                  <UserCircle className="mr-2 h-4 w-4" />
+                  Profile
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
