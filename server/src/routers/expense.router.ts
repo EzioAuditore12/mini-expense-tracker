@@ -21,6 +21,9 @@ import { getAllExpensesSchema } from '@/validators/main/expense/get-all/request'
 import { getExpenseSummaryResponseSchema } from '@/validators/main/expense/get-summary/response.schema';
 import { getCategorySummaryResponseSchema } from '@/validators/main/expense/get-category-summary/response.schema';
 import { getMonthlyTrendResponseSchema } from '@/validators/main/expense/get-monthly-trend/response.schema';
+import { expenseSummaryQuerySchema } from '@/validators/main/expense/get-summary/request.schema';
+import { expenseCategorySummaryQuerySchema } from '@/validators/main/expense/get-category-summary/request.schema';
+import { expenseMonthlyTrendQuerySchema } from '@/validators/main/expense/get-monthly-trend/request.schema';
 import { getAllExpensesResponseSchema } from '@/validators/main/expense/get-all/response';
 import { expenseDeleteResponseSchema } from '@/validators/main/expense/delete/response';
 import { expenseDeleteParamSchema } from '@/validators/main/expense/delete/request';
@@ -57,6 +60,7 @@ expenseRegistry.registerPath({
   tags: [TAGS.EXPENSE],
   request: {
     headers: authHeaderSchema,
+    query: expenseSummaryQuerySchema,
   },
   responses: createApiResponse(getExpenseSummaryResponseSchema, 'Success'),
 });
@@ -64,6 +68,8 @@ expenseRegistry.registerPath({
 expenseRouter.get(
   '/summary',
   authMiddleware,
+  //@ts-ignore
+  validate({ query: expenseSummaryQuerySchema }),
   expenseController.getSummaryByUserId,
 );
 
@@ -75,6 +81,7 @@ expenseRegistry.registerPath({
   tags: [TAGS.EXPENSE],
   request: {
     headers: authHeaderSchema,
+    query: expenseCategorySummaryQuerySchema,
   },
   responses: createApiResponse(getCategorySummaryResponseSchema, 'Success'),
 });
@@ -82,6 +89,8 @@ expenseRegistry.registerPath({
 expenseRouter.get(
   '/category-summary',
   authMiddleware,
+  //@ts-ignore
+  validate({ query: expenseCategorySummaryQuerySchema }),
   expenseController.getCategorySummaryByUserId,
 );
 
@@ -93,6 +102,7 @@ expenseRegistry.registerPath({
   tags: [TAGS.EXPENSE],
   request: {
     headers: authHeaderSchema,
+    query: expenseMonthlyTrendQuerySchema,
   },
   responses: createApiResponse(getMonthlyTrendResponseSchema, 'Success'),
 });
@@ -100,6 +110,8 @@ expenseRegistry.registerPath({
 expenseRouter.get(
   '/monthly-trend',
   authMiddleware,
+  //@ts-ignore
+  validate({ query: expenseMonthlyTrendQuerySchema }),
   expenseController.getMonthlyTrendByUserId,
 );
 

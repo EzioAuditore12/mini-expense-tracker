@@ -10,6 +10,9 @@ import type { ExpenseParamRequest } from '@/validators/main/expense/param';
 import type { GetAllExpensesRequest } from '@/validators/main/expense/get-all/request';
 import type { ExpenseDeleteParamRequest } from '@/validators/main/expense/delete/request';
 import type { ExportExpensesRequest } from '@/validators/main/expense/export/request.schema';
+import type { ExpenseSummaryRequest } from '@/validators/main/expense/get-summary/request.schema';
+import type { ExpenseCategorySummaryRequest } from '@/validators/main/expense/get-category-summary/request.schema';
+import type { ExpenseMonthlyTrendRequest } from '@/validators/main/expense/get-monthly-trend/request.schema';
 
 export class ExpenseController {
   private readonly expenseService = expenseService;
@@ -80,26 +83,29 @@ export class ExpenseController {
       .send({ message: `Record ${expenseId} deleted successfully` });
   };
 
-  public getSummaryByUserId = async (req: Request, res: Response) => {
+  public getSummaryByUserId = async (req: ExpenseSummaryRequest, res: Response) => {
     const userId = req.user?.id!;
+    const { month, year } = req.query;
 
-    const result = await this.expenseService.getSummaryByUserId(userId);
+    const result = await this.expenseService.getSummaryByUserId(userId, { month, year });
 
     return res.status(StatusCodes.OK).send(result);
   };
 
-  public getCategorySummaryByUserId = async (req: Request, res: Response) => {
+  public getCategorySummaryByUserId = async (req: ExpenseCategorySummaryRequest, res: Response) => {
     const userId = req.user?.id!;
+    const { month, year } = req.query;
 
-    const result = await this.expenseService.getCategorySummaryByUserId(userId);
+    const result = await this.expenseService.getCategorySummaryByUserId(userId, { month, year });
 
     return res.status(StatusCodes.OK).send(result);
   };
 
-  public getMonthlyTrendByUserId = async (req: Request, res: Response) => {
+  public getMonthlyTrendByUserId = async (req: ExpenseMonthlyTrendRequest, res: Response) => {
     const userId = req.user?.id!;
+    const { year } = req.query;
 
-    const result = await this.expenseService.getMonthlyTrendByUserId(userId);
+    const result = await this.expenseService.getMonthlyTrendByUserId(userId, { year });
 
     return res.status(StatusCodes.OK).send(result);
   };

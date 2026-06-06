@@ -1,4 +1,4 @@
-import { useState, type ComponentProps } from 'react';
+import { useState, useEffect, useMemo, type ComponentProps } from 'react';
 import { PlusIcon, WalletIcon } from 'lucide-react';
 
 import {
@@ -28,11 +28,7 @@ import {
 import { getMonth, getYear } from 'date-fns';
 import { monthItems, yearItems } from '../../month-year-select';
 
-const categoryItems = categoryEnum.map((category) => ({
-  label: category.charAt(0) + category.slice(1).toLowerCase(),
-
-  value: category,
-}));
+// categoryItems moved inside component to support dynamic filtering
 
 const currentDate = new Date();
 
@@ -44,6 +40,9 @@ interface CreateBudgetFormDialogProps extends ComponentProps<typeof Button> {
   isPending: boolean;
   handleSubmit: (data: CreateBudgetParam) => void;
   emptyState?: boolean;
+  defaultMonth?: string;
+  defaultYear?: string;
+  existingCategories?: string[];
 }
 
 export function AddBudgetFormDialog({
@@ -51,9 +50,22 @@ export function AddBudgetFormDialog({
   handleSubmit,
   isPending,
   emptyState = false,
+  defaultMonth,
+  defaultYear,
+  existingCategories = [],
   ...props
 }: CreateBudgetFormDialogProps) {
   const [open, setOpen] = useState<boolean>(false);
+
+  const availableCategories = useMemo(() => {
+    const existingSet = new Set(existingCategories);
+    return categoryEnum
+      .filter((cat) => !existingSet.has(cat))
+      .map((category) => ({
+        label: category.charAt(0) + category.slice(1).toLowerCase(),
+        value: category,
+      }));
+  }, [existingCategories]);
 
   const AddBudgetForm = useAppForm({
     validators: {
@@ -62,9 +74,9 @@ export function AddBudgetFormDialog({
 
     defaultValues: {
       limitAmount: '0',
-      month: currentMonth,
-      year: currentYear,
-      category: 'ENTERTAINMENT',
+      month: defaultMonth || currentMonth,
+      year: defaultYear || currentYear,
+      category: availableCategories[0]?.value || 'FOOD',
     } as CreateBudgetParam,
 
     onSubmit: async ({ value }) => {
@@ -77,6 +89,20 @@ export function AddBudgetFormDialog({
       setOpen(false);
     },
   });
+
+  // Sync form defaults when dialog opens or parent filters change
+  useEffect(() => {
+    if (open) {
+      const activeMonth = defaultMonth || currentMonth;
+      const activeYear = defaultYear || currentYear;
+      const defaultCategory = availableCategories[0]?.value || 'FOOD';
+
+      AddBudgetForm.setFieldValue('month', activeMonth);
+      AddBudgetForm.setFieldValue('year', activeYear);
+      AddBudgetForm.setFieldValue('limitAmount', '0');
+      AddBudgetForm.setFieldValue('category', defaultCategory);
+    }
+  }, [open, defaultMonth, defaultYear, availableCategories]);
 
   const triggerButton = (
     <DialogTrigger asChild>
@@ -127,7 +153,7 @@ export function AddBudgetFormDialog({
             <AddBudgetForm.AppField name="category">
               {(field) => (
                 <field.SelectField
-                  items={categoryItems}
+                  items={availableCategories}
                   className="mt-2"
                   placeholder="Select category"
                 />

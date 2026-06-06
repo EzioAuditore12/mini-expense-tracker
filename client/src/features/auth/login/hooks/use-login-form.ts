@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
+import { toast } from 'sonner';
 
 import { loginApi } from '../api/login.api';
 
@@ -18,7 +19,9 @@ export function useLoginForm() {
       navigate({ to: '/', replace: true });
     },
     onError: (error) => {
-      alert(error.message);
+      toast.error('Login Failed', {
+        description: error.message,
+      });
     },
   });
 }

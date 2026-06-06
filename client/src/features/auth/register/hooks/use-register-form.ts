@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
+import { toast } from 'sonner';
 
 import { registerApi } from '../api/register.api';
 
@@ -18,7 +19,9 @@ export function useRegisterForm() {
       navigate({ to: '/', replace: true });
     },
     onError: (error) => {
-      alert(error.message);
+      toast.error('Registration Failed', {
+        description: error.message,
+      });
     },
   });
 }

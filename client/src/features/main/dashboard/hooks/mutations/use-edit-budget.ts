@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 import { updateBudgetApi } from '../../api/budget/update.api';
 import { USE_GET_BUDGET_QUERY_KEY } from '../queries/use-get-budget-summary';
@@ -12,11 +13,14 @@ export function useEditBudget() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: [USE_GET_BUDGET_QUERY_KEY] });
 
-      console.log(data);
-      alert('Budget updated successfully');
+      toast.success('Budget Updated', {
+        description: `Updated budget for ${data.category.toLowerCase()} to $${data.limitAmount.toFixed(2)}.`,
+      });
     },
     onError: (error) => {
-      alert(error.message);
+      toast.error('Failed to Update Budget', {
+        description: error.message,
+      });
     },
   });
 }

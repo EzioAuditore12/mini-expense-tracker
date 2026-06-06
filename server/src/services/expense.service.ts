@@ -1,4 +1,5 @@
-import { and, count, desc, eq, gt, gte, like, lte, sum } from 'drizzle-orm';
+import { and, count, desc, eq, gte, like, lte, sum } from 'drizzle-orm';
+import { startOfMonth, endOfMonth } from 'date-fns';
 
 import { db } from '@/db';
 import {
@@ -13,9 +14,10 @@ import type { GetAllExpensesResponse } from '@/validators/main/expense/get-all/r
 import type { GetExpenseSummaryResponse } from '@/validators/main/expense/get-summary/response.schema';
 import type { GetCategorySummaryResponse } from '@/validators/main/expense/get-category-summary/response.schema';
 import type { GetMonthlyTrendResponse } from '@/validators/main/expense/get-monthly-trend/response.schema';
-import { Category } from '@/db/tables/enums/category.enum';
+import type { Category } from '@/db/tables/enums/category.enum';
+import type { ExportExpenses } from '@/validators/main/expense/export/request.schema';
+
 import { convertObjectsToCsv } from '@/utils/convert-objects-to-csv';
-import { ExportExpenses } from '@/validators/main/expense/export/request.schema';
 
 export class ExpenseService {
   private readonly database = db;
@@ -64,21 +66,13 @@ export class ExpenseService {
 
     const conditions = [eq(this.table.userId, userId)];
 
-    if (search) {
-      conditions.push(like(this.table.note, `%${search}%`));
-    }
+    if (search) conditions.push(like(this.table.note, `%${search}%`));
 
-    if (category) {
-      conditions.push(eq(this.table.category, category));
-    }
+    if (category) conditions.push(eq(this.table.category, category));
 
-    if (startDate) {
-      conditions.push(gte(this.table.expenseDate, startDate));
-    }
+    if (startDate) conditions.push(gte(this.table.expenseDate, startDate));
 
-    if (endDate) {
-      conditions.push(lte(this.table.expenseDate, endDate));
-    }
+    if (endDate) conditions.push(lte(this.table.expenseDate, endDate));
 
     const whereClause = and(...conditions);
 
@@ -102,13 +96,9 @@ export class ExpenseService {
 
     return {
       data: expenses,
-
       total: totalResult,
-
       page,
-
       pageSize,
-
       totalPages: Math.ceil(totalResult / pageSize),
     };
   }
@@ -141,30 +131,41 @@ export class ExpenseService {
    */
   public async getSummaryByUserId(
     userId: string,
+    query?: { month?: number; year?: number },
   ): Promise<GetExpenseSummaryResponse> {
-    const expenses = await this.getAllWithAmountAndCategoryByUserId(userId);
+    const expenses = await this.getAllWithAmountAndCategoryByUserId(
+      userId,
+      query,
+    );
 
     return {
       totalExpenses: this.calculateTotalExpenses(expenses),
-
       totalTransactions: expenses.length,
-
       mostUsedCategory: this.calculateMostUsedCategory(expenses),
-
       highestExpense: this.calculateHighestExpense(expenses),
     };
   }
 
   public async getCategorySummaryByUserId(
     userId: string,
+    query?: { month?: number; year?: number },
   ): Promise<GetCategorySummaryResponse> {
+    const conditions = [eq(this.table.userId, userId)];
+
+    if (query?.month !== undefined && query?.year !== undefined) {
+      const startDate = startOfMonth(new Date(query.year, query.month - 1));
+      const endDate = endOfMonth(new Date(query.year, query.month - 1));
+      conditions.push(gte(this.table.expenseDate, startDate));
+      conditions.push(lte(this.table.expenseDate, endDate));
+    }
+
     const result = await this.database
       .select({
         category: this.table.category,
         total: sum(this.table.amount),
       })
       .from(this.table)
-      .where(eq(this.table.userId, userId))
+      .where(and(...conditions))
       .groupBy(this.table.category);
 
     return result.map((item) => ({
@@ -179,11 +180,21 @@ export class ExpenseService {
    */
   public async getMonthlyTrendByUserId(
     userId: string,
+    query?: { year?: number },
   ): Promise<GetMonthlyTrendResponse> {
+    const conditions = [eq(this.table.userId, userId)];
+
+    if (query?.year !== undefined) {
+      const startDate = new Date(query.year, 0, 1);
+      const endDate = new Date(query.year, 11, 31, 23, 59, 59, 999);
+      conditions.push(gte(this.table.expenseDate, startDate));
+      conditions.push(lte(this.table.expenseDate, endDate));
+    }
+
     const expenses = await this.database
       .select()
       .from(this.table)
-      .where(eq(this.table.userId, userId));
+      .where(and(...conditions));
 
     const monthlyMap = new Map<
       string,
@@ -281,11 +292,21 @@ export class ExpenseService {
 
   private async getAllWithAmountAndCategoryByUserId(
     userId: string,
+    query?: { month?: number; year?: number },
   ): Promise<Pick<Expense, 'amount' | 'category'>[]> {
+    const conditions = [eq(this.table.userId, userId)];
+
+    if (query?.month !== undefined && query?.year !== undefined) {
+      const startDate = startOfMonth(new Date(query.year, query.month - 1));
+      const endDate = endOfMonth(new Date(query.year, query.month - 1));
+      conditions.push(gte(this.table.expenseDate, startDate));
+      conditions.push(lte(this.table.expenseDate, endDate));
+    }
+
     return await this.database
       .select({ amount: this.table.amount, category: this.table.category })
       .from(this.table)
-      .where(eq(this.table.userId, userId));
+      .where(and(...conditions));
   }
 
   private calculateTotalExpenses(expenses: Pick<Expense, 'amount'>[]): number {

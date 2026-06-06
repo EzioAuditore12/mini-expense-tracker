@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 import { deleteBudgetApi } from '../../api/budget/delete.api';
 
@@ -12,11 +13,14 @@ export function useDeleteBudget() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: [USE_GET_BUDGET_QUERY_KEY] });
 
-      console.log(data.message);
-      alert(data.message);
+      toast.success('Budget Deleted', {
+        description: data.message,
+      });
     },
     onError: (error) => {
-      alert(error.message);
+      toast.error('Failed to Delete Budget', {
+        description: error.message,
+      });
     },
   });
 }

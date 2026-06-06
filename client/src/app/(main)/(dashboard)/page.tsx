@@ -9,14 +9,8 @@ import { DashboardHeader } from '@/features/main/dashboard/components/header';
 
 import { DashboardStatsSection } from '@/features/main/dashboard/components/stats';
 import { MonthlySpendingTrendCard } from '@/features/main/dashboard/components/chart-cards/monthly-spending-trends';
-import { BudgetOverviewCard } from '@/features/main/dashboard/components/budget-section/overview-card';
-import { AddBudgetFormDialog } from '@/features/main/dashboard/components/budget-section/form/create-dialog';
-import { EditBudgetDialog } from '@/features/main/dashboard/components/budget-section/form/edit-dialog';
-
-import { useBudgetMutations } from '@/features/main/dashboard/hooks/mutations';
+import { BudgetAnalyticsSection } from '@/features/main/dashboard/components/budget-section/budget-analytics-section';
 import { useDashboardQueries } from '@/features/main/dashboard/hooks/queries';
-
-import type { BudgetSummary } from '@/features/main/dashboard/schemas/budget/summary/response.schema';
 
 export const Route = createFileRoute('/(main)/(dashboard)/')({
   component: RouteComponent,
@@ -41,16 +35,12 @@ function RouteComponent() {
 
       <ExpenseAnalyticsSection queries={dashboardQueries} />
 
-      <BudgetAnalyticsSection queries={dashboardQueries} />
+      <BudgetAnalyticsSection month={month} year={year} queries={dashboardQueries} />
     </div>
   );
 }
 
-function ExpenseAnalyticsSection({
-  queries,
-}: {
-  queries: ReturnType<typeof useDashboardQueries>;
-}) {
+function ExpenseAnalyticsSection({ queries }: { queries: ReturnType<typeof useDashboardQueries> }) {
   const {
     categorySummary,
     isCategoryLoading,
@@ -88,55 +78,3 @@ function ExpenseAnalyticsSection({
     </>
   );
 }
-
-function BudgetAnalyticsSection({
-  queries,
-}: {
-  queries: ReturnType<typeof useDashboardQueries>;
-}) {
-  const [editingBudget, setEditingBudget] = useState<BudgetSummary | null>(null);
-
-  const {
-    budgetSummary,
-    isBudgetLoading,
-    isBudgetFetching,
-  } = queries;
-
-  const {
-    createBudget,
-    isCreatePending,
-    editBudget,
-    isEditPending,
-    deleteBudget,
-  } = useBudgetMutations();
-
-  return (
-    <>
-      <BudgetOverviewCard
-        data={budgetSummary}
-        isLoading={isBudgetLoading}
-        isFetching={isBudgetFetching}
-        onEdit={(id) => {
-          const budget = budgetSummary?.find((b) => b.id === id);
-
-          if (budget) setEditingBudget(budget);
-        }}
-        onDelete={(id) => {
-          if (confirm('Are you sure you want to delete this budget?')) {
-            deleteBudget(id);
-          }
-        }}
-      />
-
-      <AddBudgetFormDialog handleSubmit={createBudget} isPending={isCreatePending} />
-
-      <EditBudgetDialog
-        budget={editingBudget}
-        onClose={() => setEditingBudget(null)}
-        isPending={isEditPending}
-        onSubmit={editBudget}
-      />
-    </>
-  );
-}
-

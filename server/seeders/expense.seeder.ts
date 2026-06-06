@@ -24,7 +24,7 @@ async function seedExpenses() {
       note: faker.commerce.productName(),
 
       expenseDate: faker.date.recent({
-        days: 180,
+        days: 5,
       }),
     }));
 
