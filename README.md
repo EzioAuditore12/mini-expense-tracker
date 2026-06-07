@@ -1,6 +1,6 @@
 # Mini Expense Tracker
 
-This repository contains the solution for **Exercise : Mini Expense Tracker**. It is a full-stack web application designed to help users log their daily spending across various categories and gain insights into where their money is going. The application features a rich user interface, data aggregation, interactive charts, CSV data export, and complete CRUD functionality secured by JWT authentication. 
+This repository contains the solution for **Mini Expense Tracker**. It is a full-stack web application designed to help users log their daily spending across various categories and gain insights into where their money is going. The application features a rich user interface, data aggregation, interactive charts, CSV data export, and complete CRUD functionality secured by JWT authentication. 
 
 ## Live Demo Links
 
@@ -132,3 +132,9 @@ mini-expense-tracker/
 
 **What I would build next:**
 - **Advanced Export Configurations**: Giving the user the capability to export specific custom date ranges as PDFs alongside the existing CSV format.
+
+## Tests
+
+We have declared tests and responses:
+- **Test Files**: 8 passed (8)
+- **Tests**: 52 passed (52)
