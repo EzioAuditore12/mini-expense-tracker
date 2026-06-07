@@ -110,8 +110,8 @@ export class AuthService {
 
     await this.insertBlaclistedRefreshToken({
       token,
-      expiredAt: new Date(tokenDetails.exp),
-      issuedAt: new Date(tokenDetails.iat),
+      expiredAt: new Date(tokenDetails.exp * 1000),
+      issuedAt: new Date(tokenDetails.iat * 1000),
     });
 
     const tokens = await this.jwtService.generateAuthTokens(tokenDetails.sub);

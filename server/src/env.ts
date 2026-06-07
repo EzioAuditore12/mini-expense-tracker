@@ -28,6 +28,8 @@ const envSchema = z.object({
 
   COMMON_RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(1000),
 
+  DB_PATH: z.string().default('./sqlite.db'),
+
   // JWT secrets & durations for access/refresh token pair strategy
   ACCESS_SECRET_KEY: z.string().default('demo_access_secret'),
   ACCESS_EXPIRATION_DURATION: z.string().default('15m'),

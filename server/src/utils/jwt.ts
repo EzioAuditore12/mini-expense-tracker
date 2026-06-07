@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import * as jose from 'jose';
 
 import { env } from '@/env';
@@ -43,6 +44,7 @@ export class Jwt {
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt(new Date())
       .setExpirationTime(this.accessExpireDuration)
+      .setJti(randomUUID())
       .sign(this.accessSecret);
   }
 
@@ -51,6 +53,7 @@ export class Jwt {
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt(new Date())
       .setExpirationTime(this.refreshExpireDuration)
+      .setJti(randomUUID())
       .sign(this.refreshSecret);
   }
 

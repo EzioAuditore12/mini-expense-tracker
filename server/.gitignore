@@ -28,3 +28,6 @@ dist-ssr
 
 public/*
 !.gitkeep
+
+# SQLite test databases
+test*.db

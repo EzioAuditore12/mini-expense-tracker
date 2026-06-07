@@ -1,5 +1,6 @@
 import type { ErrorRequestHandler, RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { globalErrorHandler } from 'express-error-toolkit';
 
 // Catch-all handler: any request that doesn't match a registered route gets a 404
 const unexpectedRequest: RequestHandler = (_req, res) => {
@@ -13,10 +14,11 @@ const addErrorToRequestLog: ErrorRequestHandler = (err, _req, res, next) => {
 };
 
 /**
- * Returns a tuple: [404 catch-all, error logger].
+ * Returns a tuple: [404 catch-all, error logger, global error handler].
  * Must be registered AFTER all routes — Express matches middleware in order.
  */
-export default (): [RequestHandler, ErrorRequestHandler] => [
-  unexpectedRequest,
-  addErrorToRequestLog,
-];
+export default (): [
+  RequestHandler,
+  ErrorRequestHandler,
+  ErrorRequestHandler,
+] => [unexpectedRequest, addErrorToRequestLog, globalErrorHandler];
