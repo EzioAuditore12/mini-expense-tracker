@@ -102,7 +102,7 @@ export function AddBudgetFormDialog({
       AddBudgetForm.setFieldValue('limitAmount', '0');
       AddBudgetForm.setFieldValue('category', defaultCategory);
     }
-  }, [open, defaultMonth, defaultYear, availableCategories]);
+  }, [open, defaultMonth, defaultYear, availableCategories, AddBudgetForm]);
 
   const triggerButton = (
     <DialogTrigger asChild>

@@ -55,12 +55,14 @@ export const expenseTable = sqliteTable(
   ],
 );
 
-export const expenseSchema = createSelectSchema(expenseTable);
+export const expenseSchema = createSelectSchema(expenseTable, {
+  amount: z.number().positive(),
+});
 
 export const expenseInsertSchema = createInsertSchema(expenseTable, {
   amount: z.coerce.number().positive('Amount should be greater than 0'),
 
-  expenseDate: z.coerce.date().max(endOfToday(), {
+  expenseDate: z.coerce.date().refine((date) => date <= endOfToday(), {
     message: 'Expense date cannot be in the future',
   }),
 });
@@ -73,7 +75,7 @@ export const expenseUpdateSchema = createUpdateSchema(expenseTable, {
 
   expenseDate: z.coerce
     .date()
-    .max(endOfToday(), {
+    .refine((date) => date <= endOfToday(), {
       message: 'Expense date cannot be in the future',
     })
     .optional(),

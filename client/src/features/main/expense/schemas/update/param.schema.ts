@@ -12,7 +12,9 @@ export const updateExpenseParamSchema = expenseSchema
     note: true,
   })
   .extend({
-    expenseDate: z.date().max(endOfToday(), 'Expense date cannot be in the future'),
+    expenseDate: z
+      .date()
+      .refine((date) => date <= endOfToday(), 'Expense date cannot be in the future'),
     amount: z
       .string()
       .refine((val) => isNumeric(val), { error: 'Amount must be numeric' })
